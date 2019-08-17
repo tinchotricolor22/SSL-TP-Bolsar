@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include "lib/extractor/extractor.h"
 #include "lib/exporter/exporter.h"
+#include <unistd.h>
 
 #define EXIT 0
 #define DEBUG 1
@@ -14,7 +15,6 @@ void injectGlobalVariables();
 char* getUserOS();
 char* getFSPath();
 char* getURL();
-int printLn(const char* message, ...);
 int printfDebug(const char* message, ...);
 int printfNone(const char* message, ...);
 Option methodOptionsMenu();
@@ -26,6 +26,14 @@ int main(){
     Option a = 2;
     mainDebugLogger("Starting program after dependency injection [event:main]");
 
+   char cwd[200];
+   if (getcwd(cwd, sizeof(cwd)) != NULL) {
+       printf("Current working dir: %s\n", cwd);
+   } else {
+       perror("getcwd() error");
+       return 1;
+   }
+   
     Option optionMethod = methodOptionsMenu();
     if (optionMethod == EXIT) {
         return 0;
@@ -47,7 +55,7 @@ int main(){
 
 //injectGlobalVariables intializes global variables to use in all the lifecycle of the program
 void injectGlobalVariables(){
-    int(*stdLogger)(const char*,...) = printLn;
+    int(*stdLogger)(const char*,...) = printf;
     int(*debugLogger)(const char*,...);
     if(DEBUG){
         debugLogger = printfDebug;
@@ -125,15 +133,6 @@ Option exportOptionsMenu(){
 void printExportResult(ExportResult result){
     mainLogger("%d",result);
 };
-
-//printLn calls printf and adds \n at the end of the line
-int printLn(const char* message, ...){
-    va_list args;
-    va_start(args,message);
-    vprintf(message,args); // TODO: Return printf int
-    va_end(args);
-    return printf("\n");
-}
 
 //printfDebug calls printf, puts [DEBUG] string before the message and \n at end of the line
 int printfDebug(const char* message, ...){
