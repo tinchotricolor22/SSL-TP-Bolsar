@@ -8,7 +8,8 @@
 
 // EXPORT OPTIONS
 #define EXPORT_CSV 1
-#define EXPORT_XLSX 2
+#define EXPORT_HTML 2
+#define EXPORT_STDOUT 3
 
 typedef int Option;
 

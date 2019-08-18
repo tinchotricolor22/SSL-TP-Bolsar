@@ -1,6 +1,5 @@
-#include "../extractor/extractor.h"
 #include "exporter.h"
 
-ExportResult exportHTML(Data* data){
+ExportResult exportHTML(Data* data,ColumnsExporterOptions *leaderColumns){
     return EXPORT_OK;
 }

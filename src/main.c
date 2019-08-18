@@ -7,7 +7,7 @@
 #include "lib/ui/ui.h"
 #include "lib/processor/processor.h"    
 
-#define DEBUG 1
+#define DEBUG 0
 
 Logger mainLogger;
 Logger mainDebugLogger;
@@ -18,6 +18,7 @@ void processorMethods(Option optionMethod,Option optionExport);
 
 ExtractorMethod extractorOption(Option optionMethod);
 ExporterMethod exporterOption(Option optionMethod);
+ColumnsExporterOptions* columnsExporterOptions();
 
 int main(){
     init();
@@ -57,6 +58,7 @@ void init(){
     initUI(stdLogger);
     initConfig(debugLogger);
     initExtractor(stdLogger,debugLogger);
+    initExporter(debugLogger);
     initProcessor(debugLogger);
 }
 
@@ -72,8 +74,9 @@ void processorMethods(Option optionMethod,Option optionExport){
 
     ExtractorMethod extractor = extractorOption(optionMethod);
     ExporterMethod exporter = exporterOption(optionExport);
+    ColumnsExporterOptions* columnOptions = columnsExporterOptions();
 
-    initProcessorMethods(extractor,exporter);
+    initProcessorMethods(extractor,exporter,columnOptions);
 }
 
 //extractorOption selects extractor strategy
@@ -95,11 +98,33 @@ ExporterMethod exporterOption(Option optionMethod){
     switch (optionMethod)
     {
         case EXPORT_CSV:
-            return exportCSV;
+            return exportLeadersCSV;
+        break;
+
+        case EXPORT_HTML:
+            return exportHTML;
         break;
 
         default:
-            return exportHTML;
+            return exportLeadersStdout;
         break;
     }
 }
+
+ColumnsExporterOptions* columnsExporterOptions(){
+    return buildLeaderColumns(1,1,1,1,1,1,1);
+}
+
+//exporterOption selects exporter strategy
+/*ExporterMethod filterOptions(Option optionMethod){
+    switch (optionMethod)
+    {
+        case EXPORT_CSV:
+            return exportLeadersCSV;
+        break;
+
+        default:
+            return exportLeadersCSV;
+        break;
+    }
+}*/

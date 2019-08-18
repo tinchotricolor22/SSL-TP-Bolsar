@@ -9,17 +9,18 @@ void initProcessor(Logger processorDebugLoggerArg){
     processorDebugLogger = processorDebugLoggerArg;
 }
 
-void initProcessorMethods(ExtractorMethod extractorMethodArg,ExporterMethod exporterMethodArg){
+void initProcessorMethods(ExtractorMethod extractorMethodArg,ExporterMethod exporterMethodArg, ColumnsExporterOptions* columnsOptionsArg){
     extractorMethod = extractorMethodArg;
     exporterMethod = exporterMethodArg;
+    columnsOptions = columnsOptionsArg;
 }
 
 ProcessResult process(){
     processorDebugLogger("Calling extractorMethod [event:process]");
     Data* data = extractorMethod();
 
-    processorDebugLogger("Calling exportData [event:process]");
-    ExportResult result = exporterMethod(data);
+    processorDebugLogger("Calling exporterMethod [event:process]");
+    ExportResult result = exporterMethod(data,columnsOptions);
 
     return PROCESS_OK;
 }

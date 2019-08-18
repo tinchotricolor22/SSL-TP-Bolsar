@@ -22,3 +22,11 @@ char* getExtractorURL(){
 char* getAuxTableFileName(){
     return "resources/aux_table_file.txt";
 }
+
+char* getExporterOutputPath(){
+    return "resources/lideres_bcba";
+}
+
+char* getCSVDelimiter(){
+    return ",";
+}

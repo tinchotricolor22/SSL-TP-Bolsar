@@ -31,13 +31,14 @@ Option exportOptionsMenu(){
     Option exportOption;
     uiLogger("Export types\n");
     uiLogger("%d- CSV\n",EXPORT_CSV);
-    uiLogger("%d- HTML\n",EXPORT_XLSX);
+    uiLogger("%d- HTML\n",EXPORT_HTML);
+    uiLogger("%d- Imprimir en pantalla\n",EXPORT_STDOUT);
     uiLogger("%d- Exit\n",EXIT);
     uiLogger("Select an option: ");
     scanf("%d", &exportOption);
 
     //Default
-    if (exportOption != EXIT && exportOption != EXPORT_CSV && exportOption != EXPORT_XLSX){
+    if (exportOption != EXIT && exportOption != EXPORT_CSV && exportOption != EXPORT_HTML && exportOption != EXPORT_STDOUT){
         exportOption = EXIT;
     }
 

@@ -13,3 +13,7 @@ char* getExtractorFSPath();
 char* getExtractorURL();
 
 char* getAuxTableFileName();
+
+char* getExporterOutputPath();
+
+char* getCSVDelimiter();

@@ -23,11 +23,11 @@ typedef struct Leader {
     double openingPrice;
     double maxPrice;
     double minPrice;
-
 } Leader;
 
 typedef struct Data {
     Leader** leaders;
+    int leaders_length;
 } Data;
 
 typedef struct Tag {
@@ -48,7 +48,7 @@ Data* extractDataWithOnlineMethod();
 Data* extractDataWithFSMethod();
 
 void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int *leaders_length);
-Data* createData(Leader **leaders);
+Data* createData(Leader **leaders,const int length);
 void add(void **elems, void *elem, int *length, const int max_length);
 
 
