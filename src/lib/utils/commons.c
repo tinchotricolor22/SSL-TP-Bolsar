@@ -17,8 +17,6 @@ void foreach(void **elems, int length, void*(*func)(void*,void*), void* arg2){
 }
 
 void init_list(void **elems, int *length, const int max_length){
-    printf("en init_list\n");
-
     elems = malloc(max_length * sizeof elems[0]);
     *length = 0;
 }
