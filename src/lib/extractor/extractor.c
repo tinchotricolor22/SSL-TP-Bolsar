@@ -1,41 +1,33 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <ctype.h>
 #include "extractor.h"
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#include "ctype.h"
+#include "../logging/logging.h"
+#include "../config/config.h"
 
-#define SUFFIX_SPECIE "3_SIMB"
+#define ID_SPECIE "spPopSimbolo"
+#define SUFFIX_VARIATION "3_VAR"
+#define SUFFIX_PURCHASE_PRICE "3_PU"
+#define SUFFIX_SALE_PRICE "3_PV"
+#define SUFFIX_OPENING_PRICE "3_PAPE"
+#define SUFFIX_MAX_PRICE "3_PMAX"
+#define SUFFIX_MIN_PRICE "3_PMIN" 
 
-struct Leader *leaders[100];
-int leaders_length = 0;
-
-void initExtractorGlobalVariables(char* userOS, char* url, char* fsPath, int(*stdLogger)(const char*,...),int(*debugLogger)(const char*,...)){
-    UserOS = userOS;
-    FSPath = fsPath;
-    URL = url;
+void initExtractor(Logger stdLogger,Logger debugLogger){
+    UserOS = getUserOS();
+    FSPath = getExtractorFSPath();
+    URL = getExtractorURL();
     extractorLogger = stdLogger;
     extractorDebugLogger = debugLogger;
 }
 
-Data extractData(Option optionMethod){
-    switch (optionMethod)
-    {
-        case METHOD_ONLINE:
-            return extractDataWithOnlineMethod();
-        break;
-
-        default:
-            return extractDataWithFSMethod();
-        break;
-    }
-}
-
-Data extractDataWithOnlineMethod(){
+Data* extractDataWithOnlineMethod(){
     extractorDebugLogger("Starting to extract data with online method [event:extractDataWithOnlineMethod]");
-    return "asd";
+    return NULL;
 }
 
-Data extractDataWithFSMethod(){
+Data* extractDataWithFSMethod(){
     extractorDebugLogger("Starting to extract data with filesystem method [event:extractDataWithFSMethod]");
     FILE *file;
 
@@ -46,97 +38,78 @@ Data extractDataWithFSMethod(){
         extractorLogger("ERROR: Cannot open file in path: %s [event:extractDataWithFSMethod]",FSPath);
     }
 
-    Data data = extractHTMLFromTableID("tbAcciones",file);
-
+    Tag **tags = malloc(TAGS_MAX_LENGTH * sizeof tags[0]);
+    int tags_length = 0;
+    
+    extractTagsFromHTML(file,tags,&tags_length,TAGS_MAX_LENGTH,TABLE_ACTIONS_ID);
     fclose(file);
+
+    Leader **leaders = malloc(LEADERS_MAX_LENGTH * sizeof leaders[0]);
+    int leaders_length = 0;
+    fillLeadersFromTags(tags,tags_length,leaders,&leaders_length);
+    
+    return createData(&leaders);
+}
+
+
+void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int *leaders_length){
+    extractorDebugLogger("Starting to fill leaders [event:fillLeadersFromRows]");
+    Leader *actualProcessingLeader;
+
+    extractorDebugLogger("tags length: %d [event:fillLeadersFromRows]",tags_length);
+    
+    for(int countTags=0; countTags < tags_length; countTags++){
+        if(!strcmp(tags[countTags]->id,ID_SPECIE)){
+            printf("matchea el value: %s \n",tags[countTags]->value);
+            Leader *newLeader = malloc(sizeof *newLeader);
+            char* specie = "specie_test";//extractStringValue(tags[countTags]->value);
+            strcpy(newLeader->specie,specie);
+            
+            add(leaders,newLeader,leaders_length,LEADERS_MAX_LENGTH);
+            actualProcessingLeader = newLeader;
+        } else if (strstr(tags[countTags]->id,SUFFIX_VARIATION)) {
+            printf("variation matchea el value: %s \n",tags[countTags]->value);
+            Leader *newLeader = malloc(sizeof *newLeader);
+            double value = 1.00; //extractVariationValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->variation = value;
+        } else if(strstr(tags[countTags]->id,SUFFIX_PURCHASE_PRICE)){
+            printf("purchase matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->purchasePrice = value;
+        } else if (strstr(tags[countTags]->id,SUFFIX_SALE_PRICE)){
+            printf("sale matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->salePrice = value;
+        } else if (strstr(tags[countTags]->id,SUFFIX_OPENING_PRICE)){
+            printf("opening matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->openingPrice = value;
+        } else if (strstr(tags[countTags]->id,SUFFIX_MAX_PRICE)){
+            printf("max price matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->maxPrice = value;
+        } else if (strstr(tags[countTags]->id,SUFFIX_MIN_PRICE)){
+            printf("min price matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            actualProcessingLeader->minPrice = value;
+        }
+    }
+}
+
+Data* createData(Leader **leaders){
+    Data* data = malloc(sizeof(data));
+    data->leaders = leaders;
     return data;
 }
 
-Data extractHTMLFromTableID(char* ID, FILE *htmlFile){
-    extractorDebugLogger("Starting to search tableID in htmlFile [event:extractHTMLFromTableID]");
-    char table[40000], tableID[50];
-    char* tableIDAux = "id=";
-    strcat(tableID,tableIDAux);
-    strcat(tableID,"\"");
-    strcat(tableID,ID);
-    strcat(tableID,"\"");
-
-    extractorDebugLogger("searching %s",tableID);
-    while(!feof(htmlFile)){
-        fgets(table,40000,htmlFile);
-        if(strstr(table,tableID)){
-            extractorDebugLogger("founded");
-            break;
-        }
-    }
-
-    FILE* tableFile;
-    tableFile = createAuxFileFromTable(table);
-    char rows[400][400];
-    extractRowsFromTable(tableFile,rows);
-    fillLeadersFromRows(rows);
-    fclose(tableFile);
-
-    return "especies";
-}
-
-Data extractRowsFromTable(FILE* tableFile, char rows[400][400]){
-    extractorDebugLogger("Starting to search especies in table with conditionRowName [event:extractRowsFromTable]");
-    //"<td id="CRES_3_VAR"
-    int countRows = 0;
-    char match[200],aux[400];
-
-    //volvemos al principio del file
-    rewind(tableFile);
-    while(fscanf(tableFile,"%s[^'</td><td']",match) != EOF){
-        printf("match de row: %s",match);
-        strcpy(aux,"");
-        strcpy(aux,match);
-        
-        while(!strstr(match,"</td><td") && fscanf(tableFile,"%s[^'</td><td']",match) != EOF){
-            strcat(aux,match);
-        }
-        strcpy(rows[countRows],aux);
-        countRows++;
-    }
-    
-    return ";";
-}
-
-FILE* createAuxFileFromTable(char* table){
-    FILE* tableFile = fopen("resources/aux_table_file.txt", "w+");
-    
-    if(tableFile == NULL){
-        extractorLogger("ERROR: Cannot open file in path: %s [event:extractDataWithFSMethod]",FSPath);
-        return tableFile;
-    }
-
-    fprintf(tableFile,"%s",table);
-    return tableFile;
-}
-
-void fillLeadersFromRows(char rows[400][400]){
-    extractorDebugLogger("Starting to fill leaders [event:fillLeadersFromRows]");
-    struct Leader *actualProcessingLeader;
-
-    for(int countRows=0, retCount = 0; countRows < 400; countRows++){
-        char propertyID[10],prefix[50],suffix[50];
-        sscanf(rows[countRows],"%[^\"]\"%[^_]_%[^\"]",propertyID,prefix,suffix);
-        printf("suffix: %s",suffix);
-        if(!strcmp(suffix,SUFFIX_SPECIE)){
-            printf("matchea");
-            struct Leader *newLeader = new_leader();
-            char* specie = "specie_test";//extractStringValue(rows[countRows]);
-
-            strcpy(newLeader->id, prefix);
-            strcpy(newLeader->specie, specie);
-            add_leader(newLeader);
-            actualProcessingLeader = newLeader;
-        }
+void add(void **elems, void *elem, int *length, const int max_length){
+    if (*length < max_length){
+        elems[(*length)++] = elem;
     }
 }
 
-Data extractValuesFromRowsID(char rows[400][400],char *id_suffix){
+
+/*Data* extractValuesFromRowsID(char rows[400][400],char *id_suffix){
     extractorDebugLogger("Starting to extract values from row ID [event:extractRowsFromTable]");
     void* ret[400];
 
@@ -178,41 +151,4 @@ void replace(char *input, const char character, const char replace)
         input[i] = replace;
     }
   }
-}
-
-struct Leader* findLeaderByID(const char* id){
-    for(int i = 0; i< 100;i++){
-        if (strcmp(leaders[i]->id, id)){
-            return leaders[i];
-        }
-    }
-    return NULL;
-}
-
-struct Leader* new_leader(){
-    struct Leader* leader ={"",
-            "",
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0};
-    return  leader;
-}
-
-void add_leader(struct Leader *leader){
-    if (leaders_length < 100){
-        leaders[leaders_length++] = leader;
-    }
-}
-
-/*
-void closeFiles(){
-
-}
-
-void removeAuxFiles(){
-
 }*/

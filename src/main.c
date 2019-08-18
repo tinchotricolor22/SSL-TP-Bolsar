@@ -1,39 +1,28 @@
-#include <stdio.h>
-#include <stdarg.h>
-#include "lib/extractor/extractor.h"
-#include "lib/exporter/exporter.h"
-#include <unistd.h>
+#include "stdio.h"
+#include "unistd.h"
+//#include "lib/extractor/extractor.h"
+//#include "lib/exporter/exporter.h"
+#include "lib/logging/logging.h"
+#include "lib/config/config.h"
+#include "lib/ui/ui.h"
+#include "lib/processor/processor.h"    
 
-#define EXIT 0
 #define DEBUG 1
 
-int(*mainLogger)(const char*,...);
-int(*mainDebugLogger)(const char*,...);
+Logger mainLogger;
+Logger mainDebugLogger;
 
-void initMainGlobalVariables(int(*stdLogger)(const char*,...),int(*debugLogger)(const char*,...));
-void injectGlobalVariables();
-char* getUserOS();
-char* getFSPath();
-char* getURL();
-int printfDebug(const char* message, ...);
-int printfNone(const char* message, ...);
-Option methodOptionsMenu();
-Option exportOptionsMenu();
-void printExportResult(ExportResult result);
+void initMain(Logger stdLogger,Logger debugLogger);
+void init();
+void processorMethods(Option optionMethod,Option optionExport);
+
+ExtractorMethod extractorOption(Option optionMethod);
+ExporterMethod exporterOption(Option optionMethod);
 
 int main(){
-    injectGlobalVariables();
-    Option a = 2;
-    mainDebugLogger("Starting program after dependency injection [event:main]");
-
-   char cwd[200];
-   if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       printf("Current working dir: %s\n", cwd);
-   } else {
-       perror("getcwd() error");
-       return 1;
-   }
-   
+    init();
+    
+    mainDebugLogger("Starting method options [event:main]");
     Option optionMethod = methodOptionsMenu();
     if (optionMethod == EXIT) {
         return 0;
@@ -44,107 +33,73 @@ int main(){
         return 0;
     }
     
-    mainDebugLogger("Calling extractData [event:main] [option_method:%d]",optionMethod);
-    Data data = extractData(optionMethod);
+    mainDebugLogger("Preparing processor [event:main]");
+    processorMethods(optionMethod,optionExport);
 
-    mainDebugLogger("Calling exportData [event:main] [option_export:%d]",optionExport);
-    ExportResult result = exportData(optionExport, data);
-    
-    printExportResult(result);
+    mainDebugLogger("Processing [event:main]");
+    ProcessResult result = process();
+
+    mainDebugLogger("Process ends with result %d [event:main]", result);
+    return result;
 }
 
-//injectGlobalVariables intializes global variables to use in all the lifecycle of the program
-void injectGlobalVariables(){
-    int(*stdLogger)(const char*,...) = printf;
-    int(*debugLogger)(const char*,...);
+//init intializes global variables like logger to use in all the lifecycle of the program
+void init(){
+    Logger stdLogger = printf;
+    Logger debugLogger;
     if(DEBUG){
         debugLogger = printfDebug;
     }else{
         debugLogger = printfNone;
     }
-    initMainGlobalVariables(stdLogger,debugLogger);
 
-    char* userOS = getUserOS();
-    char* URL = getURL();
-    char* FSPath = getFSPath();
-    
-    initExtractorGlobalVariables(userOS,URL,FSPath,stdLogger,debugLogger);
+    initMain(stdLogger,debugLogger);
+    initUI(stdLogger);
+    initConfig(debugLogger);
+    initExtractor(stdLogger,debugLogger);
+    initProcessor(debugLogger);
 }
 
-void initMainGlobalVariables(int(*stdLogger)(const char*,...),int(*debugLogger)(const char*,...)){
+//init sets logger variables
+void initMain(Logger stdLogger,Logger debugLogger){
     mainLogger = stdLogger;
     mainDebugLogger = debugLogger;
 }
 
-//getUserOS returns user's Operating System 
-char* getUserOS(){
-    mainDebugLogger("Getting user OS [event:getUserOS]");
-    return "macOS";
+//processorMethods instance extractor and exporter option
+void processorMethods(Option optionMethod,Option optionExport){
+    mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]",optionMethod,optionExport);
+
+    ExtractorMethod extractor = extractorOption(optionMethod);
+    ExporterMethod exporter = exporterOption(optionExport);
+
+    initProcessorMethods(extractor,exporter);
 }
 
-char* getFSPath(){
-    return "resources/lideres_bcba.html";
-}
+//extractorOption selects extractor strategy
+ExtractorMethod extractorOption(Option optionMethod){
+    switch (optionMethod)
+    {
+        case METHOD_ONLINE:
+            return extractDataWithOnlineMethod;
+        break;
 
-char* getURL(){
-    return "http://tpssl.rf.gd/lideres_bcba.html";
-}
-
-
-//methodOptions prints the menu to select an scrapping method
-//returns selected option
-Option methodOptionsMenu(){
-    Option methodOption;
-    mainLogger("Scrapping type\n");
-    mainLogger("%d- Bolsar info online\n",METHOD_ONLINE);
-    mainLogger("%d- Bolsar info from fileSystem\n",METHOD_FS);
-    mainLogger("%d- Exit\n",EXIT);
-    mainLogger("Select an option: ");
-    scanf("%d", &methodOption);
-
-    //Default
-    if (methodOption != EXIT && methodOption != METHOD_ONLINE && methodOption != METHOD_FS){
-        methodOption = EXIT;
+        default:
+            return extractDataWithFSMethod;
+        break;
     }
-
-    return methodOption;
 }
 
-//methodOptions prints the menu to select export options
-//returns selected option
-Option exportOptionsMenu(){
-    Option exportOption;
-    mainLogger("Export types\n");
-    mainLogger("%d- CSV\n",EXPORT_CSV);
-    mainLogger("%d- XLSX\n",EXPORT_XLSX);
-    mainLogger("%d- Exit\n",EXIT);
-    mainLogger("Select an option: ");
-    scanf("%d", &exportOption);
+//exporterOption selects exporter strategy
+ExporterMethod exporterOption(Option optionMethod){
+    switch (optionMethod)
+    {
+        case EXPORT_CSV:
+            return exportCSV;
+        break;
 
-    //Default
-    if (exportOption != EXIT && exportOption != EXPORT_CSV && exportOption != EXPORT_XLSX){
-        exportOption = EXIT;
+        default:
+            return exportHTML;
+        break;
     }
-
-    return exportOption;
-}
-
-//printExportResult prints view for exportResult
-void printExportResult(ExportResult result){
-    mainLogger("%d",result);
-};
-
-//printfDebug calls printf, puts [DEBUG] string before the message and \n at end of the line
-int printfDebug(const char* message, ...){
-    va_list args;
-    va_start(args,message);
-    printf("[DEBUG] ");
-    vprintf(message,args); // TODO: Return printf int
-    va_end(args);
-    return printf("\n");
-}
-
-//printfNone returns 0. Must be used to avoid output messages.
-int printfNone(const char* message, ...){
-    return 0;
 }

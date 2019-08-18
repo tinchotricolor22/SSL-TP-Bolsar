@@ -1,18 +1,21 @@
-// METHODS OPTIONS
-#define METHOD_ONLINE 1
-#define METHOD_FS 2
+#include "../logging/logging.h"
+#include "stdio.h"
 
-typedef char* Data;
-typedef int Option;
+#define TAGS_MAX_LENGTH 1000
+#define TAG_ID 50
+#define TAG_RAW_TAG 144
+#define TAG_VALUE 200
+#define LEADERS_MAX_LENGTH 1000
+
+#define TABLE_ACTIONS_ID "tbAcciones"
 
 char* UserOS;
 char* URL;
 char* FSPath;
-int(*extractorLogger)(const char*,...);
-int(*extractorDebugLogger)(const char*,...);
+Logger extractorLogger;
+Logger extractorDebugLogger;
 
 typedef struct Leader {
-    char id[20];
     char specie[100];
     double variation;
     double purchasePrice;
@@ -23,27 +26,42 @@ typedef struct Leader {
 
 } Leader;
 
-//initExtractorGlobalVariables injects dependency variables for extractor that includes logger functions
-void initExtractorGlobalVariables(char* userOS, char* url, char* fsPath, int(*stdLogger)(const char*,...),int(*debugLogger)(const char*,...));
+typedef struct Data {
+    Leader** leaders;
+} Data;
 
-//extractData is a wrapper for select the method for extract depending the option selected
-Data extractData(Option);
+typedef struct Tag {
+    char id[TAG_ID];
+    char rawTag[TAG_RAW_TAG];
+    char value[TAG_VALUE];
+} Tag;
+
+typedef Data*(*ExtractorMethod)();
+
+//initExtractor injects dependency variables for extractor that includes logger functions
+void initExtractor(Logger stdLogger,Logger debugLogger);
 
 //extractWithOnlineMethod extracts data connecting to domain URL with HTTP protocol
-Data extractDataWithOnlineMethod();
+Data* extractDataWithOnlineMethod();
 
 //extractWithOnlineMethod extracts data obtaining html from filesystem
-Data extractDataWithFSMethod();
+Data* extractDataWithFSMethod();
 
-//TODO: se hacen acá o son privadas?
-Data extractHTMLFromTableID(char* tableID, FILE* htmlFile);
-Data extractRowsFromTable(FILE* tableFile, char rows[100][400]);
-Data extractValuesFromRowsID(char rows[400][400],char *ID);
-FILE* createAuxFileFromTable(char* table);
+void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int *leaders_length);
+Data* createData(Leader **leaders);
+void add(void **elems, void *elem, int *length, const int max_length);
 
-void trim(const char *input, char *result);
-void replace(char *input, const char character, const char replace);
 
-struct Leader* new_leader();
-void add_leader(struct Leader *leader);
-void fillLeadersFromRows(char rows[400][400]);
+//HTML
+#define TABLE_CHAR_LENGTH 40000
+#define ID_LENGTH 50
+
+Logger extractorHTMLDebugLogger;
+
+void extractTagsFromHTML(FILE* file, Tag **tags, int *tags_length, const int tags_max_length,char* init_id);
+char* extractHTMLFromTableID(char* ID, FILE *htmlFile);
+void extractTagsFromTable(FILE* tableFile, Tag **tags, int *tags_length,const int tags_max_length);
+void makeID(char* htmlID, const char* ID);
+void searchPropertyID(FILE *htmlFile, char* htmlLine, const char* propertyID);
+
+FILE* createAuxFileFromString(char* string,const char* auxPath);
