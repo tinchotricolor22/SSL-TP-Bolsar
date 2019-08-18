@@ -1,3 +1,6 @@
+#ifndef CONFIG_HEADER
+#define CONFIG_HEADER
+
 #include "../logging/logging.h"
 
 Logger configDebugLogger;
@@ -13,3 +16,9 @@ char* getExtractorFSPath();
 char* getExtractorURL();
 
 char* getAuxTableFileName();
+
+char* getExporterOutputPath();
+
+char* getCSVDelimiter();
+
+#endif

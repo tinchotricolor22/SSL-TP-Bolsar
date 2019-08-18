@@ -3,6 +3,7 @@
 #include "string.h"
 #include "stdlib.h"
 #include "ctype.h"
+#include "../utils/commons.h"
 #include "../logging/logging.h"
 #include "../config/config.h"
 
@@ -22,12 +23,12 @@ void initExtractor(Logger stdLogger,Logger debugLogger){
     extractorDebugLogger = debugLogger;
 }
 
-Data* extractDataWithOnlineMethod(){
+ExtractorResult extractDataWithOnlineMethod(Data** data){
     extractorDebugLogger("Starting to extract data with online method [event:extractDataWithOnlineMethod]");
-    return NULL;
+    return EXTRACTOR_RESULT_OK;
 }
 
-Data* extractDataWithFSMethod(){
+ExtractorResult extractDataWithFSMethod(Data** data){
     extractorDebugLogger("Starting to extract data with filesystem method [event:extractDataWithFSMethod]");
     FILE *file;
 
@@ -35,7 +36,8 @@ Data* extractDataWithFSMethod(){
     file = fopen(FSPath,"r");
 
     if (file == NULL){
-        extractorLogger("ERROR: Cannot open file in path: %s [event:extractDataWithFSMethod]",FSPath);
+        extractorDebugLogger("ERROR: Cannot open file in path: %s [event:extractDataWithFSMethod]",FSPath);
+        return EXTRACTOR_RESULT_ERROR_OPENING_FILE;
     }
 
     Tag **tags = malloc(TAGS_MAX_LENGTH * sizeof tags[0]);
@@ -48,9 +50,9 @@ Data* extractDataWithFSMethod(){
     int leaders_length = 0;
     fillLeadersFromTags(tags,tags_length,leaders,&leaders_length);
     
-    return createData(&leaders);
+    *data = createData(leaders,leaders_length);
+    return EXTRACTOR_RESULT_OK;
 }
-
 
 void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int *leaders_length){
     extractorDebugLogger("Starting to fill leaders [event:fillLeadersFromRows]");
@@ -60,54 +62,47 @@ void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int 
     
     for(int countTags=0; countTags < tags_length; countTags++){
         if(!strcmp(tags[countTags]->id,ID_SPECIE)){
-            printf("matchea el value: %s \n",tags[countTags]->value);
+            extractorDebugLogger("matchea el value: %s \n",tags[countTags]->value);
             Leader *newLeader = malloc(sizeof *newLeader);
-            char* specie = "specie_test";//extractStringValue(tags[countTags]->value);
-            strcpy(newLeader->specie,specie);
+            //char* specie = "specie_test";//extractStringValue(tags[countTags]->value);
+            strcpy(newLeader->specie,"specie_test");
             
             add(leaders,newLeader,leaders_length,LEADERS_MAX_LENGTH);
             actualProcessingLeader = newLeader;
         } else if (strstr(tags[countTags]->id,SUFFIX_VARIATION)) {
-            printf("variation matchea el value: %s \n",tags[countTags]->value);
-            Leader *newLeader = malloc(sizeof *newLeader);
-            double value = 1.00; //extractVariationValue(rows[tags[countTags]->value]);
+            extractorDebugLogger("variation matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00f; //extractVariationValue(rows[tags[countTags]->value]);
             actualProcessingLeader->variation = value;
         } else if(strstr(tags[countTags]->id,SUFFIX_PURCHASE_PRICE)){
-            printf("purchase matchea el value: %s \n",tags[countTags]->value);
+            extractorDebugLogger("purchase matchea el value: %s \n",tags[countTags]->value);
             double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
             actualProcessingLeader->purchasePrice = value;
         } else if (strstr(tags[countTags]->id,SUFFIX_SALE_PRICE)){
-            printf("sale matchea el value: %s \n",tags[countTags]->value);
-            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            extractorDebugLogger("sale matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00f; //extractDoubleValue(rows[tags[countTags]->value]);
             actualProcessingLeader->salePrice = value;
         } else if (strstr(tags[countTags]->id,SUFFIX_OPENING_PRICE)){
-            printf("opening matchea el value: %s \n",tags[countTags]->value);
-            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            extractorDebugLogger("opening matchea el value: %s \n",tags[countTags]->value);
+            double value = 0.00f; //extractDoubleValue(rows[tags[countTags]->value]);
             actualProcessingLeader->openingPrice = value;
         } else if (strstr(tags[countTags]->id,SUFFIX_MAX_PRICE)){
-            printf("max price matchea el value: %s \n",tags[countTags]->value);
-            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            extractorDebugLogger("max price matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00f; //extractDoubleValue(rows[tags[countTags]->value]);
             actualProcessingLeader->maxPrice = value;
         } else if (strstr(tags[countTags]->id,SUFFIX_MIN_PRICE)){
-            printf("min price matchea el value: %s \n",tags[countTags]->value);
-            double value = 1.00; //extractDoubleValue(rows[tags[countTags]->value]);
+            extractorDebugLogger("min price matchea el value: %s \n",tags[countTags]->value);
+            double value = 1.00f; //extractDoubleValue(rows[tags[countTags]->value]);
             actualProcessingLeader->minPrice = value;
         }
     }
 }
 
-Data* createData(Leader **leaders){
-    Data* data = malloc(sizeof(data));
-    data->leaders = leaders;
-    return data;
+Data* createData(Leader **leaders,const int length){
+    Data *newData = malloc(sizeof *newData);
+    newData->leaders = leaders;
+    newData->leaders_length = length;
+    return newData;
 }
-
-void add(void **elems, void *elem, int *length, const int max_length){
-    if (*length < max_length){
-        elems[(*length)++] = elem;
-    }
-}
-
 
 /*Data* extractValuesFromRowsID(char rows[400][400],char *id_suffix){
     extractorDebugLogger("Starting to extract values from row ID [event:extractRowsFromTable]");
