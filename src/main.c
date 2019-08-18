@@ -1,13 +1,14 @@
 #include "stdio.h"
 #include "unistd.h"
-//#include "lib/extractor/extractor.h"
-//#include "lib/exporter/exporter.h"
 #include "lib/logging/logging.h"
 #include "lib/config/config.h"
 #include "lib/ui/ui.h"
 #include "lib/processor/processor.h"    
+#include "lib/extractor/extractor.h"
+#include "lib/formatter/formatter.h"
+#include "lib/exporter/exporter.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 Logger mainLogger;
 Logger mainDebugLogger;
@@ -16,9 +17,10 @@ void initMain(Logger stdLogger,Logger debugLogger);
 void init();
 void processorMethods(Option optionMethod,Option optionExport);
 
-ExtractorMethod extractorOption(Option optionMethod);
-ExporterMethod exporterOption(Option optionMethod);
-ColumnsExporterOptions* columnsExporterOptions();
+ExtractorMethod extractorMethod(Option optionMethod);
+ExporterMethod exporterMethod(Option optionMethod);
+ExporterColumns* columns();
+Formatter* formatter();
 
 int main(){
     init();
@@ -33,15 +35,19 @@ int main(){
     if (optionExport == EXIT) {
         return 0;
     }
-    
+
     mainDebugLogger("Preparing processor [event:main]");
     processorMethods(optionMethod,optionExport);
 
     mainDebugLogger("Processing [event:main]");
-    ProcessResult result = process();
-
-    mainDebugLogger("Process ends with result %d [event:main]", result);
-    return result;
+    ProcessResult processResult = process();
+    
+    if(processResult != PROCESS_OK){
+        printFinalErrorMessage(processResult);
+    }
+    
+    mainDebugLogger("Process ends with result %d [event:main]", processResult);
+    return processResult;
 }
 
 //init intializes global variables like logger to use in all the lifecycle of the program
@@ -72,15 +78,16 @@ void initMain(Logger stdLogger,Logger debugLogger){
 void processorMethods(Option optionMethod,Option optionExport){
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]",optionMethod,optionExport);
 
-    ExtractorMethod extractor = extractorOption(optionMethod);
-    ExporterMethod exporter = exporterOption(optionExport);
-    ColumnsExporterOptions* columnOptions = columnsExporterOptions();
+    ExtractorMethod extractor = extractorMethod(optionMethod);
+    ExporterMethod exporter = exporterMethod(optionExport);
+    ExporterColumns* cols = columns();
+    Formatter* formatt = formatter();
 
-    initProcessorMethods(extractor,exporter,columnOptions);
+    initProcessParams(extractor,exporter,&formatt,&cols);
 }
 
 //extractorOption selects extractor strategy
-ExtractorMethod extractorOption(Option optionMethod){
+ExtractorMethod extractorMethod(Option optionMethod){
     switch (optionMethod)
     {
         case METHOD_ONLINE:
@@ -93,8 +100,8 @@ ExtractorMethod extractorOption(Option optionMethod){
     }
 }
 
-//exporterOption selects exporter strategy
-ExporterMethod exporterOption(Option optionMethod){
+//exportMetod selects exporter strategy
+ExporterMethod exporterMethod(Option optionMethod){
     switch (optionMethod)
     {
         case EXPORT_CSV:
@@ -111,20 +118,13 @@ ExporterMethod exporterOption(Option optionMethod){
     }
 }
 
-ColumnsExporterOptions* columnsExporterOptions(){
+ExporterColumns* columns(){
     return buildLeaderColumns(1,1,1,1,1,1,1);
 }
 
-//exporterOption selects exporter strategy
-/*ExporterMethod filterOptions(Option optionMethod){
-    switch (optionMethod)
-    {
-        case EXPORT_CSV:
-            return exportLeadersCSV;
-        break;
+Formatter* formatter(){
+    return buildLeaderFormatter();
+}
 
-        default:
-            return exportLeadersCSV;
-        break;
-    }
+/*ExporterMethod filterOptions(Option optionMethod){
 }*/

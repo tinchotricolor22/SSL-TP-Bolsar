@@ -4,26 +4,26 @@
 #include "string.h"
 #include "stdio.h"
 
-ExportResult exportLeadersCSV(Data* data, ColumnsExporterOptions *columns){
+ExportResult exportLeadersCSV(Data* data, ExporterParams *params){
     exporterDebugLogger("Starting export in CSV format [event:exportLeadersCSV]");
     char outputPath[PATH_LIMIT];
-    getOutPutPath(outputPath);
+    getOutPutPath(outputPath,CSV_EXTENSION);
     exporterDebugLogger("Opening file in path %s [event:exportLeadersCSV]", outputPath);
     FILE* csvFile = fopen(outputPath,"w");
 
     if(csvFile == NULL){
         exporterDebugLogger("ERROR: Opening file in path %s [event:exportLeadersCSV]", outputPath);
-        return EXPORT_ERROR;
+        return EXPORT_RESULT_ERROR;
     }
 
-    writeCSVFileWithData(csvFile, data, columns);
+    writeCSVFileWithData(csvFile, data, params->columns);
     fclose(csvFile);
 
     exporterDebugLogger("Export of CSV succesfully [event:exportLeadersCSV]");
-    return EXPORT_OK;
+    return EXPORT_RESULT_OK;
 }
 
-void writeCSVFileWithData(FILE* output, Data* data, ColumnsExporterOptions *columns){
+void writeCSVFileWithData(FILE* output, Data* data, ExporterColumns *columns){
     exporterDebugLogger("Building and writing headers [event:writeCSVFileWithData]");
     char headers[LINE_LIMIT];
     buildLeaderCSVHeaders(columns,headers);
@@ -37,7 +37,7 @@ void writeCSVFileWithData(FILE* output, Data* data, ColumnsExporterOptions *colu
     }
 }
 
-void buildLeaderCSVHeaders(ColumnsExporterOptions *leaderColumns, char* headers){
+void buildLeaderCSVHeaders(ExporterColumns *leaderColumns, char* headers){
     strcpy(headers,"");
     if(leaderColumns->specie){
         strcat(headers,LEADER_SPECIE_HEADER);
@@ -76,7 +76,7 @@ void buildLeaderCSVHeaders(ColumnsExporterOptions *leaderColumns, char* headers)
     removeLastCharacter(headers);
 }
 
-void buildLeaderCSVLine(Leader *leader, ColumnsExporterOptions *leaderColumns, char* line){
+void buildLeaderCSVLine(Leader *leader, ExporterColumns *leaderColumns, char* line){
     char buffer[LINE_LIMIT];
     strcpy(line,"");
     withBreakLine(line);

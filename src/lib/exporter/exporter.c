@@ -1,3 +1,6 @@
+#ifndef EXPORTER_HEADER
+#define EXPORTER_HEADER
+
 #include "exporter.h"
 #include "../config/config.h"
 #include "../logging/logging.h"
@@ -8,7 +11,7 @@ void initExporter(Logger debugLogger){
     exporterDebugLogger = debugLogger;
 }
 
-ColumnsExporterOptions* buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, int openingPrice, int maxPrice, int minPrice){
+ExporterColumns* buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, int openingPrice, int maxPrice, int minPrice){
     LeaderColumns *leaderColumns = malloc(sizeof (*leaderColumns));
     leaderColumns->specie = specie;
     leaderColumns->variation = variation;
@@ -20,9 +23,9 @@ ColumnsExporterOptions* buildLeaderColumns(int specie, int variation, int purcha
     return leaderColumns;
 }
 
-void getOutPutPath(char* output){
+void getOutPutPath(char* output,const char* extension){
     strcpy(output,getExporterOutputPath());
-    strcat(output,".csv");
+    strcat(output,extension);
 }
 
 void withDelimiter(char* str){
@@ -39,3 +42,5 @@ void removeLastCharacter(char* str){
         str[length-1] = '\0';
     }
 }
+
+#endif

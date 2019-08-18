@@ -1,10 +1,13 @@
-#include "../extractor/extractor.h"
-// PROCESS RESULT
-#define EXPORT_OK 0
-#define EXPORT_ERROR 1
+#include "exportertypes.h"
+#include "../domain/leader.h"
+#include "../logging/logging.h"
+#include "stdio.h"
 
 #define LINE_LIMIT 1000
 #define PATH_LIMIT 100
+
+#define HTML_EXTENSION ".html"
+#define CSV_EXTENSION ".csv"
 
 //LEADER
 #define LEADER_SPECIE_HEADER "Especie"
@@ -15,36 +18,61 @@
 #define LEADER_MAX_PRICE_HEADER "Precio Máximo"
 #define LEADER_MIN_PRICE_HEADER "Precio Mínimo"
 
-typedef struct LeaderColumns{
-    int specie;
-    int variation;
-    int purchasePrice;
-    int salePrice;
-    int openingPrice;
-    int maxPrice;
-    int minPrice;
-} LeaderColumns;
+ExporterColumns* buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, int openingPrice, int maxPrice, int minPrice);
 
-typedef LeaderColumns ColumnsExporterOptions;
 Logger exporterDebugLogger;
-
-typedef int ExportResult;
-typedef ExportResult(*ExporterMethod)(Data*,ColumnsExporterOptions*);
 
 //initExporter injects dependency variables for exporter that includes logger functions
 void initExporter(Logger debugLogger);
 
-ExportResult exportLeadersCSV(Data*,ColumnsExporterOptions *columnsOptions);
-ExportResult exportHTML(Data*,ColumnsExporterOptions *columnsOptions);
-ExportResult exportLeadersStdout(Data*,ColumnsExporterOptions *columnsOptions);
+ExportResult exportLeadersCSV(Data*,ExporterParams *params);
+ExportResult exportHTML(Data*,ExporterParams *params);
+ExportResult exportLeadersStdout(Data*,ExporterParams *params);
 
-//LEADER
-ColumnsExporterOptions* buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, int openingPrice, int maxPrice, int minPrice);
-void buildLeaderCSVHeaders(ColumnsExporterOptions *leaderColumns, char* headers);
-void writeCSVFileWithData(FILE* output, Data* data, ColumnsExporterOptions *columns);
-void buildLeaderCSVLine(Leader *leader, ColumnsExporterOptions *columns,char *line);
-
-void getOutPutPath(char* output);
+//Common
+void getOutPutPath(char* output,const char* extension);
 void withDelimiter(char* str);
 void withBreakLine(char* str);
 void removeLastCharacter(char* str);
+
+//LEADER CSV
+void writeCSVFileWithData(FILE* output, Data* data, ExporterColumns *columns);
+void buildLeaderCSVHeaders(ExporterColumns *leaderColumns, char* headers);
+void buildLeaderCSVLine(Leader *leader, ExporterColumns *columns,char *line);
+
+//LEADER HTML
+void writeHTMLFileWithData(FILE* output, Data* data, ExporterColumns *columns, Formatter *formatter);
+void writeHTMLTableWithData(FILE* output, Data* data, ExporterColumns *columns, Formatter *formatter);
+void buildLeaderHTMLTableHeader(char* headers, ExporterColumns *leaderColumns);
+void buildLeaderHTMLLine(Leader *leader, char* line, ExporterColumns *leaderColumns, Formatter *formatter);
+
+void writePropertyAndValueInTableRowTagOpening(char* output, Format *format);
+
+//HTML Tags File
+void writeHTMLMainTagsOpening(FILE* output);
+void writeHTMLMainTagsClosing(FILE* output);
+void writeHTMLTableTagOpening(FILE* output);
+void writeHTMLTableTagClosing(FILE* output);
+void writeHTMLTableHeaderTagsOpening(FILE* output);
+void writeHTMLTableHeaderTagsClosing(FILE* output);
+void writeHTMLTableBodyTagsOpening(FILE* output);
+void writeHTMLTableBodyTagsClosing(FILE* output);
+void writeHTMLTableRowTagsOpening(FILE* output);
+void writeHTMLTableRowTagsClosing(FILE* output);
+void writeHTMLTableColumnTagsOpening(FILE* output);
+void writeHTMLTableColumnTagsClosing(FILE* output);
+
+//HTML Tags String
+void writeStringHTMLMainTagsOpening(char* output);
+void writeStringHTMLMainTagsClosing(char* output);
+void writeStringHTMLTableTagOpening(char* output);
+void writeStringHTMLTableTagClosing(char* output);
+void writeStringHTMLTableHeaderTagsOpening(char* output);
+void writeStringHTMLTableHeaderTagsClosing(char* output);
+void writeStringHTMLTableBodyTagsOpening(char* output);
+void writeStringHTMLTableBodyTagsClosing(char* output);
+void writeStringHTMLTableRowTagsOpening(char* output);
+void writeStringHTMLTableRowTagsOpeningAndApplyFormats(char* output,Format **format_list, int format_list_length);
+void writeStringHTMLTableRowTagsClosing(char* output);
+void writeStringHTMLTableColumnTagsOpening(char* output);
+void writeStringHTMLTableColumnTagsClosing(char* output);

@@ -24,7 +24,7 @@ char* getAuxTableFileName(){
 }
 
 char* getExporterOutputPath(){
-    return "resources/lideres_bcba";
+    return "resources/lideres_bcba_result";
 }
 
 char* getCSVDelimiter(){

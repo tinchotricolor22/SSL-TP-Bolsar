@@ -1,14 +1,11 @@
 #include "exporter.h"
-#include "../config/config.h"
-#include "../logging/logging.h"
-#include "string.h"
 #include "stdio.h"
 
-ExportResult exportLeadersStdout(Data* data, ColumnsExporterOptions *columns){
+ExportResult exportLeadersStdout(Data* data, ExporterParams *params){
     exporterDebugLogger("Starting export in stdout [event:exportLeadersStdout]");    
 
-    writeCSVFileWithData(stdout, data, columns);
+    writeCSVFileWithData(stdout, data, params->columns);
 
     exporterDebugLogger("Export in stdout succesfully [event:exportLeadersStdout]");
-    return EXPORT_OK;
+    return EXPORT_RESULT_OK;
 }

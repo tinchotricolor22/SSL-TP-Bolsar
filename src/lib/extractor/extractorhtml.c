@@ -9,7 +9,6 @@ void extractTagsFromHTML(FILE* file, Tag **tags, int *tags_length, const int tag
     FILE* tableFile = createAuxFileFromString(table,getAuxTableFileName());
     
     extractTagsFromTable(tableFile,tags,tags_length,tags_max_length);
-    extractorDebugLogger("after extractTagsFromTable?");
     fclose(tableFile);
 }
 

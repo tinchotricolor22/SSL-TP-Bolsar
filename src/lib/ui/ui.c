@@ -8,7 +8,6 @@ void initUI(Logger stdLogger){
 //methodOptions prints the menu to select an scrapping method
 //returns selected option
 Option methodOptionsMenu(){
-    printf("entramos en la funcion");
     Option methodOption;
     uiLogger("Scrapping method\n");
     uiLogger("%d- Bolsar info online\n",METHOD_ONLINE);
@@ -32,7 +31,7 @@ Option exportOptionsMenu(){
     uiLogger("Export types\n");
     uiLogger("%d- CSV\n",EXPORT_CSV);
     uiLogger("%d- HTML\n",EXPORT_HTML);
-    uiLogger("%d- Imprimir en pantalla\n",EXPORT_STDOUT);
+    uiLogger("%d- Print in screen\n",EXPORT_STDOUT);
     uiLogger("%d- Exit\n",EXIT);
     uiLogger("Select an option: ");
     scanf("%d", &exportOption);
@@ -43,4 +42,8 @@ Option exportOptionsMenu(){
     }
 
     return exportOption;
+}
+
+void printFinalErrorMessage(int errorCode){
+    uiLogger("The process finalize with error code: %d\n",errorCode);
 }

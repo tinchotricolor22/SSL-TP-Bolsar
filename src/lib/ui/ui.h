@@ -17,5 +17,6 @@ void initUI(Logger stdLogger);
 
 Option methodOptionsMenu();
 Option exportOptionsMenu();
+void printFinalErrorMessage(int errorCode);
 
 Logger uiLogger;
