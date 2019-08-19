@@ -2,7 +2,7 @@
 #include "../formatter/formattertypes.h"
 #include "../utils/commons.h"
 
-ExportResult exportHTML(Data *data, ExporterParams *params) {
+ExportResult exportHTML(ParserOutput *data, ExporterParams *params) {
     exporterDebugLogger("Starting export in HTML format [event:exportHTML]");
     char outputPath[PATH_LIMIT];
     getOutPutPath(outputPath, HTML_EXTENSION);
@@ -21,13 +21,13 @@ ExportResult exportHTML(Data *data, ExporterParams *params) {
     return EXPORT_RESULT_OK;
 }
 
-void writeHTMLFileWithData(FILE *output, Data *data, ExporterColumns *columns, Formatter *formatter) {
+void writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter) {
     writeHTMLMainTagsOpening(output);
     writeHTMLTableWithData(output, data, columns, formatter);
     writeHTMLMainTagsClosing(output);
 }
 
-void writeHTMLTableWithData(FILE *output, Data *data, ExporterColumns *columns, Formatter *formatter) {
+void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter) {
     exporterDebugLogger("Building and writing Table [event:writeHTMLTableWithData]");
 
     writeHTMLTableTagOpening(output);

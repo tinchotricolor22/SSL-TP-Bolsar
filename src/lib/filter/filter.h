@@ -7,6 +7,8 @@
 #define FILTER_RESULT_ERROR 1
 typedef int FilterResult;
 
+typedef ParserOutput FilterOutput;
+
 typedef FilterResult(*Filter)(void *data, void *filteredData);
 
 typedef struct Filters {
@@ -14,7 +16,7 @@ typedef struct Filters {
     int filter_list_length;
 } Filters;
 
-FilterResult filterMajor05Variation(Data *data, Data *filteredData);
+FilterResult filterMajor05Variation(ParserOutput *data, ParserOutput *filteredData);
 
 int major05Variation(Leader *leader);
 

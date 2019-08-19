@@ -8,23 +8,17 @@
 
 #define TABLE_ACTIONS_ID "tbAcciones"
 
-char *UserOS;
-char *URL;
-char *FSPath;
 Logger parserDebugLogger;
 
 //initParser injects dependency variables for parser that includes logger functions
 void initParser(Logger debugLogger);
 
-//extractWithOnlineMethod extracts data connecting to domain URL with HTTP protocol
-ParserResult extractDataWithOnlineMethod(Data **);
-
-//extractDataWithFSMethod extracts data obtaining html from filesystem
-ParserResult extractDataWithFSMethod(Data **);
+//parseDataFromHTML extracts data obtaining html from filesystem
+ParserResult parseDataFromHTML(ParserOutput **, ParserInput*);
 
 void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, int *leaders_length);
 
-Data *createData(Leader **leaders, const int length);
+ParserOutput *createParserOutput(Leader **leaders, const int length);
 
 //HTML
 #define TABLE_CHAR_LENGTH 40000

@@ -3,25 +3,25 @@
 #include "lib/config/config.h"
 #include "lib/ui/ui.h"
 #include "lib/processor/processor.h"
+#include "lib/data/data.h"
 #include "lib/parser/parser.h"
 #include "lib/filter/filter.h"
 #include "lib/formatter/formatter.h"
 #include "lib/exporter/exporter.h"
-#include <unistd.h>
-
 
 #define DEBUG 1
 
-Logger mainLogger;
 Logger mainDebugLogger;
 
-void initMain(Logger stdLogger, Logger debugLogger);
+void initMain(Logger debugLogger);
 
 void init();
 
 void processorMethods(Option optionMethod, Option optionExport);
 
-ParserMethod parserMethod(Option optionMethod);
+DataMethod dataMethod(Option optionMethod);
+
+ParserMethod parser();
 
 ExporterMethod exporterMethod(Option optionMethod);
 
@@ -69,17 +69,17 @@ void init() {
         debugLogger = printfNone;
     }
 
-    initMain(stdLogger, debugLogger);
+    initMain(debugLogger);
     initUI(stdLogger);
     initConfig(debugLogger);
-    initParser(stdLogger);
+    initData(debugLogger);
+    initParser(debugLogger);
     initExporter(debugLogger);
     initProcessor(debugLogger);
 }
 
 //init sets logger variables
-void initMain(Logger stdLogger, Logger debugLogger) {
-    mainLogger = stdLogger;
+void initMain(Logger debugLogger) {
     mainDebugLogger = debugLogger;
 }
 
@@ -88,25 +88,26 @@ void processorMethods(Option optionMethod, Option optionExport) {
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", optionMethod,
                     optionExport);
 
-    ParserMethod parser = parserMethod(optionMethod);
-    ExporterMethod exporter = exporterMethod(optionExport);
-    Filters *filts = filters();
-    ExporterColumns *cols = columns();
-    Formatter *formatt = formatter();
+    DataMethod dataParam = dataMethod(optionMethod);
+    ParserMethod parserParam = parser();
+    ExporterMethod exporterParam = exporterMethod(optionExport);
+    Filters *filtersParam = filters();
+    ExporterColumns *columsParam = columns();
+    Formatter *formatterParam = formatter();
 
 
-    initProcessParams(parser, exporter, filts, &formatt, &cols);
+    initProcessParams(dataParam, parserParam, exporterParam, filtersParam, &formatterParam, &columsParam);
 }
 
-//parserMethod selects parser strategy
-ParserMethod parserMethod(Option optionMethod) {
+//dataMethod selects data get strategy
+DataMethod dataMethod(Option optionMethod) {
     switch (optionMethod) {
         case METHOD_ONLINE:
-            return extractDataWithOnlineMethod;
+            return getDataWithOnlineMethod;
             break;
 
         default:
-            return extractDataWithFSMethod;
+            return getDataWithFSMethod;
             break;
     }
 }
@@ -128,6 +129,11 @@ ExporterMethod exporterMethod(Option optionMethod) {
     }
 }
 
+//parserMethod selects parser strategy
+ParserMethod parser() {
+    return parseDataFromHTML;
+}
+
 ExporterColumns *columns() {
     return buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
 }
@@ -139,6 +145,7 @@ Formatter *formatter() {
 Filters *filters() {
     return buildLeaderFilters();
 }
+
 
 /*ExporterMethod filterOptions(Option optionMethod){
 }*/

@@ -1,10 +1,11 @@
 #include "filter.h"
+#include "stdlib.h"
 #include "../utils/commons.h"
 #include "../domain/leader.h"
 
 #define FILTERS_LEADERS 1
 
-FilterResult filterMajor05Variation(Data *data, Data *filteredData) {
+FilterResult filterMajor05Variation(ParserOutput *data, FilterOutput *filteredData) {
     filter(data->leaders, &(data->leaders_length), filteredData->leaders, &(filteredData->leaders_length),
            major05Variation);
     return FILTER_RESULT_OK;

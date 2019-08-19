@@ -27,11 +27,11 @@ Logger exporterDebugLogger;
 //initExporter injects dependency variables for exporter that includes logger functions
 void initExporter(Logger debugLogger);
 
-ExportResult exportLeadersCSV(Data *, ExporterParams *params);
+ExportResult exportLeadersCSV(ParserOutput *, ExporterParams *params);
 
-ExportResult exportHTML(Data *, ExporterParams *params);
+ExportResult exportHTML(ParserOutput *, ExporterParams *params);
 
-ExportResult exportLeadersStdout(Data *, ExporterParams *params);
+ExportResult exportLeadersStdout(ParserOutput *, ExporterParams *params);
 
 //Common
 void getOutPutPath(char *output, const char *extension);
@@ -43,16 +43,16 @@ void withBreakLine(char *str);
 void removeLastCharacter(char *str);
 
 //LEADER CSV
-void writeCSVFileWithData(FILE *output, Data *data, ExporterColumns *columns);
+void writeCSVFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns);
 
 void buildLeaderCSVHeaders(ExporterColumns *leaderColumns, char *headers);
 
 void buildLeaderCSVLine(Leader *leader, ExporterColumns *columns, char *line);
 
 //LEADER HTML
-void writeHTMLFileWithData(FILE *output, Data *data, ExporterColumns *columns, Formatter *formatter);
+void writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter);
 
-void writeHTMLTableWithData(FILE *output, Data *data, ExporterColumns *columns, Formatter *formatter);
+void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter);
 
 void buildLeaderHTMLTableHeader(char *headers, ExporterColumns *leaderColumns);
 

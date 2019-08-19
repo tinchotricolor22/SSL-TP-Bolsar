@@ -2,22 +2,26 @@
 #define PARSER_TYPES_HEADER
 
 #include "../domain/leader.h"
+#include "../data/datatypes.h"
+#include "stdio.h"
 
 #define PARSER_RESULT_OK 0
-#define PARSER_RESULT_ERROR_OPENING_FILE 1
-#define PARSER_RESULT_ERROR 2
+#define PARSER_RESULT_ERROR 1
 
 #define TAG_ID 200
 #define TAG_RAW_TAG 200
 #define TAG_VALUE 200
 
-
 typedef int ParserResult;
 
-typedef struct Data {
+typedef struct ParserOutput {
     Leader **leaders;
     int leaders_length;
-} Data;
+} ParserOutput;
+
+typedef struct ParserInput {
+    FILE* file;
+} ParserInput;
 
 //TODO: Esto hacerlo en un type de html
 typedef struct Tag {
@@ -26,6 +30,8 @@ typedef struct Tag {
     char value[TAG_VALUE];
 } Tag;
 
-typedef ParserResult(*ParserMethod)(Data **);
+typedef ParserResult(*ParserMethod)(ParserOutput **, ParserInput *);
+
+ParserInput* buildParserInputFromDataOutput(DataOutput*);
 
 #endif
