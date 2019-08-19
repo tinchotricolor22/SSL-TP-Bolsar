@@ -1,20 +1,20 @@
-#include "extractor.h"
+#include "parser.h"
 #include "../config/config.h"
 #include "stdlib.h"
 #include "string.h"
 #include "../utils/commons.h"
 
-void extractTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id) {
-    extractorDebugLogger("Starting to process htmlFile [event:processHTMLExtractor]");
-    char *table = extractHTMLFromTableID(init_id, file);
+void parseTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id) {
+    parserDebugLogger("Starting to process htmlFile [event:parseTagsFromHTML]");
+    char *table = parseHTMLFromTableID(init_id, file);
     FILE *tableFile = createAuxFileFromString(table, getAuxTableFileName());
 
-    extractTagsFromTable(tableFile, tags, tags_length, tags_max_length);
+    parseTagsFromTable(tableFile, tags, tags_length, tags_max_length);
     fclose(tableFile);
 }
 
-char *extractHTMLFromTableID(char *ID, FILE *htmlFile) {
-    extractorDebugLogger("Starting to extract table from htmlFile [event:extractHTMLFromTableID]");
+char *parseHTMLFromTableID(char *ID, FILE *htmlFile) {
+    parserDebugLogger("Starting to extract table from htmlFile [event:parseHTMLFromTableID]");
     char htmlLine[TABLE_CHAR_LENGTH], propertyID[ID_LENGTH];
 
     makeID(propertyID, ID);
@@ -23,8 +23,8 @@ char *extractHTMLFromTableID(char *ID, FILE *htmlFile) {
     return htmlLine;
 }
 
-void extractTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length) {
-    extractorDebugLogger("Starting to extract tags from table file [event:extractTagsFromTable]");
+void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length) {
+    parserDebugLogger("Starting to extract tags from table file [event:parseTagsFromTable]");
     char rawTag[TAG_RAW_TAG], value[TAG_VALUE];
 
     //volvemos al principio del file
@@ -45,11 +45,11 @@ void extractTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const i
 }
 
 FILE *createAuxFileFromString(char *string, const char *auxPath) {
-    extractorDebugLogger("Creating aux file to iterate table in path %s [event:createAuxFileFromString]", auxPath);
+    parserDebugLogger("Creating aux file to iterate table in path %s [event:createAuxFileFromString]", auxPath);
     FILE *file = fopen(auxPath, "w+");
 
     if (file == NULL) {
-        extractorDebugLogger("ERROR: Cannot open file in path: %s [event:createAuxFileFromString]", auxPath);
+        parserDebugLogger("ERROR: Cannot open file in path: %s [event:createAuxFileFromString]", auxPath);
         return file;
     }
 
@@ -66,11 +66,11 @@ void makeID(char *htmlID, const char *ID) {
 }
 
 void searchPropertyID(FILE *htmlFile, char *htmlLine, const char *propertyID) {
-    extractorDebugLogger("Searching %s table", propertyID);
+    parserDebugLogger("Searching %s table", propertyID);
     while (!feof(htmlFile)) {
         fgets(htmlLine, 40000, htmlFile);
         if (strstr(htmlLine, propertyID)) {
-            extractorDebugLogger("%s table founded", propertyID);
+            parserDebugLogger("%s table founded", propertyID);
             break;
         }
     }

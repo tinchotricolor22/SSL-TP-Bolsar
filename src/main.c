@@ -3,7 +3,7 @@
 #include "lib/config/config.h"
 #include "lib/ui/ui.h"
 #include "lib/processor/processor.h"
-#include "lib/extractor/extractor.h"
+#include "lib/parser/parser.h"
 #include "lib/filter/filter.h"
 #include "lib/formatter/formatter.h"
 #include "lib/exporter/exporter.h"
@@ -21,7 +21,7 @@ void init();
 
 void processorMethods(Option optionMethod, Option optionExport);
 
-ExtractorMethod extractorMethod(Option optionMethod);
+ParserMethod parserMethod(Option optionMethod);
 
 ExporterMethod exporterMethod(Option optionMethod);
 
@@ -72,7 +72,7 @@ void init() {
     initMain(stdLogger, debugLogger);
     initUI(stdLogger);
     initConfig(debugLogger);
-    initExtractor(stdLogger, debugLogger);
+    initParser(stdLogger);
     initExporter(debugLogger);
     initProcessor(debugLogger);
 }
@@ -83,23 +83,23 @@ void initMain(Logger stdLogger, Logger debugLogger) {
     mainDebugLogger = debugLogger;
 }
 
-//processorMethods instance extractor and exporter option
+//processorMethods instance parser and exporter option
 void processorMethods(Option optionMethod, Option optionExport) {
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", optionMethod,
                     optionExport);
 
-    ExtractorMethod extractor = extractorMethod(optionMethod);
+    ParserMethod parser = parserMethod(optionMethod);
     ExporterMethod exporter = exporterMethod(optionExport);
     Filters *filts = filters();
     ExporterColumns *cols = columns();
     Formatter *formatt = formatter();
 
 
-    initProcessParams(extractor, exporter, filts, &formatt, &cols);
+    initProcessParams(parser, exporter, filts, &formatt, &cols);
 }
 
-//extractorOption selects extractor strategy
-ExtractorMethod extractorMethod(Option optionMethod) {
+//parserMethod selects parser strategy
+ParserMethod parserMethod(Option optionMethod) {
     switch (optionMethod) {
         case METHOD_ONLINE:
             return extractDataWithOnlineMethod;

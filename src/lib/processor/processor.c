@@ -1,5 +1,5 @@
 #include "processor.h"
-#include "../extractor/extractortypes.h"
+#include "../parser/parsertypes.h"
 #include "../exporter/exportertypes.h"
 #include "../filter/filter.h"
 #include "stdlib.h"
@@ -10,10 +10,10 @@ void initProcessor(Logger processorDebugLoggerArg) {
     processorDebugLogger = processorDebugLoggerArg;
 }
 
-void initProcessParams(ExtractorMethod extractorMethod, ExporterMethod exporterMethod, Filters *filters,
+void initProcessParams(ParserMethod parserMethod, ExporterMethod exporterMethod, Filters *filters,
                        Formatter **formatter, ExporterColumns **columns) {
     processParams = malloc(sizeof *processParams);
-    processParams->extractorMethod = extractorMethod;
+    processParams->parserMethod = parserMethod;
     processParams->exporterMethod = exporterMethod;
     processParams->filters = filters;
     processParams->formatter = *formatter;
@@ -21,12 +21,12 @@ void initProcessParams(ExtractorMethod extractorMethod, ExporterMethod exporterM
 }
 
 ProcessResult process() {
-    processorDebugLogger("Calling extractorMethod [event:process]");
+    processorDebugLogger("Calling parserMethod [event:process]");
     Data *data;
-    ExtractorResult resultExtractor = processParams->extractorMethod(&data);
+    ParserResult resultParser = processParams->parserMethod(&data);
 
-    if (resultExtractor != EXTRACTOR_RESULT_OK) {
-        return PROCESS_ERROR_EXTRACTOR;
+    if (resultParser != PARSER_RESULT_OK) {
+        return PROCESS_ERROR_PARSER;
     }
 
     processorDebugLogger("Calling filters [event:process]");

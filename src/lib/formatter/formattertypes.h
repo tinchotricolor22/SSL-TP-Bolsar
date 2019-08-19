@@ -1,7 +1,7 @@
 #ifndef FORMATTER_TYPES_HEADER
 #define FORMATTER_TYPES_HEADER
 
-#include "../extractor/extractortypes.h"
+#include "../parser/parsertypes.h"
 #include "../domain/leader.h"
 
 #define COMPONENT_TR "TR" //debería haber un header para formatter de html

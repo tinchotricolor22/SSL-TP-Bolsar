@@ -1,4 +1,4 @@
-#include "extractortypes.h"
+#include "parsertypes.h"
 #include "../domain/leader.h"
 #include "../logging/logging.h"
 #include "stdio.h"
@@ -11,17 +11,16 @@
 char *UserOS;
 char *URL;
 char *FSPath;
-Logger extractorLogger;
-Logger extractorDebugLogger;
+Logger parserDebugLogger;
 
-//initExtractor injects dependency variables for extractor that includes logger functions
-void initExtractor(Logger stdLogger, Logger debugLogger);
+//initParser injects dependency variables for parser that includes logger functions
+void initParser(Logger debugLogger);
 
 //extractWithOnlineMethod extracts data connecting to domain URL with HTTP protocol
-ExtractorResult extractDataWithOnlineMethod(Data **);
+ParserResult extractDataWithOnlineMethod(Data **);
 
-//extractWithOnlineMethod extracts data obtaining html from filesystem
-ExtractorResult extractDataWithFSMethod(Data **);
+//extractDataWithFSMethod extracts data obtaining html from filesystem
+ParserResult extractDataWithFSMethod(Data **);
 
 void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, int *leaders_length);
 
@@ -31,13 +30,11 @@ Data *createData(Leader **leaders, const int length);
 #define TABLE_CHAR_LENGTH 40000
 #define ID_LENGTH 50
 
-Logger extractorHTMLDebugLogger;
+void parseTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id);
 
-void extractTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id);
+char *parseHTMLFromTableID(char *ID, FILE *htmlFile);
 
-char *extractHTMLFromTableID(char *ID, FILE *htmlFile);
-
-void extractTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length);
+void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length);
 
 void makeID(char *htmlID, const char *ID);
 

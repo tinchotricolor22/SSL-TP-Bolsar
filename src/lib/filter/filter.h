@@ -1,7 +1,7 @@
 #ifndef FILTER_HEADER
 #define FILTER_HEADER
 
-#include "../extractor/extractortypes.h" //Cambiar
+#include "parsertypes.h" //Cambiar
 
 #define FILTER_RESULT_OK 0
 #define FILTER_RESULT_ERROR 1

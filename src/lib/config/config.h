@@ -10,11 +10,11 @@ void initConfig(Logger debugLogger);
 //getUserOS returns user's Operating System 
 char *getUserOS();
 
-//getExtractorFSPath returns file system path
-char *getExtractorFSPath();
+//getParserFSPath returns file system path
+char *getParserFSPath();
 
-//getExtractorURL returns URL to connect the extractor
-char *getExtractorURL();
+//getParserURL returns URL to connect the parser
+char *getParserURL();
 
 char *getAuxTableFileName();
 

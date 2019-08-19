@@ -11,11 +11,11 @@ char *getUserOS() {
     return "macOS";
 }
 
-char *getExtractorFSPath() {
+char *getParserFSPath() {
     return "src/resources/lideres_bcba.html";
 }
 
-char *getExtractorURL() {
+char *getParserURL() {
     return "http://tpssl.rf.gd/lideres_bcba.html";
 }
 

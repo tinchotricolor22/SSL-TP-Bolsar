@@ -1,7 +1,7 @@
 #ifndef EXPORTER_TYPES_HEADER
 #define EXPORTER_TYPES_HEADER
 
-#include "../extractor/extractortypes.h" // Por el momento
+#include "../parser/parsertypes.h" // Por el momento
 #include "../formatter/formattertypes.h"
 
 // PROCESS RESULT
