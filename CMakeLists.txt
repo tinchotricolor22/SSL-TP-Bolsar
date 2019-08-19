@@ -1,5 +1,3 @@
-CMakeLists.txt
-
 cmake_minimum_required(VERSION 3.14)
 project(SSL_TP_Bolsar)
 
