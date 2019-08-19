@@ -30,7 +30,11 @@ ProcessResult process(){
     
     processorDebugLogger("Calling filters [event:process]");
     Data *filteredData = malloc(sizeof *filteredData);
-    executeFilters(data,&filteredData);
+    FilterResult resultFilter = executeFilters(data,&filteredData);
+
+    if(resultFilter != FILTER_RESULT_OK){
+        return PROCESS_ERROR_FILTER;
+    }
 
     processorDebugLogger("Calling exportMethod [event:process]");
     ExporterParams *exporterParams = buildExporterParams();
@@ -55,7 +59,10 @@ FilterResult executeFilters(Data* data, Data* filteredData){
     for(int i = 0 ; i< processParams->filters->filter_list_length ; i++){
 
        Filter execFilter = processParams->filters->filter_list[i];
-       execFilter(data,filteredData);
+       FilterResult result = execFilter(data,filteredData);
+       if(result != FILTER_RESULT_OK){
+           return result;
+       }
     }
     return FILTER_RESULT_OK;
 }
