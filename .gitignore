@@ -4,6 +4,5 @@
 src/output/*
 executable
 scratch/
-/CMakeLists.txt
 /cmake-build-debug/
 .idea/
