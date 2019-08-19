@@ -7,15 +7,15 @@
 #define EXTRACTOR_RESULT_ERROR_OPENING_FILE 1
 #define EXTRACTOR_RESULT_ERROR 2
 
-#define TAG_ID 50
-#define TAG_RAW_TAG 144
+#define TAG_ID 200
+#define TAG_RAW_TAG 200
 #define TAG_VALUE 200
 
 
 typedef int ExtractorResult;
 
 typedef struct Data {
-    Leader** leaders;
+    Leader **leaders;
     int leaders_length;
 } Data;
 
@@ -25,6 +25,6 @@ typedef struct Tag {
     char value[TAG_VALUE];
 } Tag;
 
-typedef ExtractorResult(*ExtractorMethod)(Data**);
+typedef ExtractorResult(*ExtractorMethod)(Data **);
 
 #endif

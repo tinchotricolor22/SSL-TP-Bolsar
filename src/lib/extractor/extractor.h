@@ -8,23 +8,24 @@
 
 #define TABLE_ACTIONS_ID "tbAcciones"
 
-char* UserOS;
-char* URL;
-char* FSPath;
+char *UserOS;
+char *URL;
+char *FSPath;
 Logger extractorLogger;
 Logger extractorDebugLogger;
 
 //initExtractor injects dependency variables for extractor that includes logger functions
-void initExtractor(Logger stdLogger,Logger debugLogger);
+void initExtractor(Logger stdLogger, Logger debugLogger);
 
 //extractWithOnlineMethod extracts data connecting to domain URL with HTTP protocol
-ExtractorResult extractDataWithOnlineMethod(Data**);
+ExtractorResult extractDataWithOnlineMethod(Data **);
 
 //extractWithOnlineMethod extracts data obtaining html from filesystem
-ExtractorResult extractDataWithFSMethod(Data**);
+ExtractorResult extractDataWithFSMethod(Data **);
 
-void fillLeadersFromTags(Tag **tags,const int tags_length, Leader **leaders,int *leaders_length);
-Data* createData(Leader **leaders,const int length);
+void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, int *leaders_length);
+
+Data *createData(Leader **leaders, const int length);
 
 //HTML
 #define TABLE_CHAR_LENGTH 40000
@@ -32,10 +33,14 @@ Data* createData(Leader **leaders,const int length);
 
 Logger extractorHTMLDebugLogger;
 
-void extractTagsFromHTML(FILE* file, Tag **tags, int *tags_length, const int tags_max_length,char* init_id);
-char* extractHTMLFromTableID(char* ID, FILE *htmlFile);
-void extractTagsFromTable(FILE* tableFile, Tag **tags, int *tags_length,const int tags_max_length);
-void makeID(char* htmlID, const char* ID);
-void searchPropertyID(FILE *htmlFile, char* htmlLine, const char* propertyID);
+void extractTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id);
 
-FILE* createAuxFileFromString(char* string,const char* auxPath);
+char *extractHTMLFromTableID(char *ID, FILE *htmlFile);
+
+void extractTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length);
+
+void makeID(char *htmlID, const char *ID);
+
+void searchPropertyID(FILE *htmlFile, char *htmlLine, const char *propertyID);
+
+FILE *createAuxFileFromString(char *string, const char *auxPath);

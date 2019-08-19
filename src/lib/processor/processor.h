@@ -5,7 +5,10 @@
 ProcessParams *processParams;
 
 void initProcessor(Logger processorDebugLoggerArg);
-void initProcessParams(ExtractorMethod extractorMethod, ExporterMethod exporterMethod,Filters* filters, Formatter** formatter, ExporterColumns** columns);
-ExporterParams* buildExporterParams();
+
+void initProcessParams(ExtractorMethod extractorMethod, ExporterMethod exporterMethod, Filters *filters,
+                       Formatter **formatter, ExporterColumns **columns);
+
+ExporterParams *buildExporterParams();
 
 ProcessResult process();

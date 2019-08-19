@@ -1,5 +1,4 @@
 #include "stdio.h"
-#include "unistd.h"
 #include "lib/logging/logging.h"
 #include "lib/config/config.h"
 #include "lib/ui/ui.h"
@@ -8,6 +7,8 @@
 #include "lib/filter/filter.h"
 #include "lib/formatter/formatter.h"
 #include "lib/exporter/exporter.h"
+#include <unistd.h>
+
 
 #define DEBUG 1
 

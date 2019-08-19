@@ -4,21 +4,22 @@
 #include "../logging/logging.h"
 
 Logger configDebugLogger;
+
 void initConfig(Logger debugLogger);
 
 //getUserOS returns user's Operating System 
-char* getUserOS();
+char *getUserOS();
 
 //getExtractorFSPath returns file system path
-char* getExtractorFSPath();
+char *getExtractorFSPath();
 
 //getExtractorURL returns URL to connect the extractor
-char* getExtractorURL();
+char *getExtractorURL();
 
-char* getAuxTableFileName();
+char *getAuxTableFileName();
 
-char* getExporterOutputPath();
+char *getExporterOutputPath();
 
-char* getCSVDelimiter();
+char *getCSVDelimiter();
 
 #endif
