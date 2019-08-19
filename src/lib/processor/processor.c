@@ -1,49 +1,54 @@
 #include "processor.h"
-#include "../extractor/extractortypes.h"
+#include "../parser/parsertypes.h"
 #include "../exporter/exportertypes.h"
 #include "../filter/filter.h"
 #include "stdlib.h"
 
 Logger processorDebugLogger;
 
-void initProcessor(Logger processorDebugLoggerArg){
+void initProcessor(Logger processorDebugLoggerArg) {
     processorDebugLogger = processorDebugLoggerArg;
 }
 
-void initProcessParams(ExtractorMethod extractorMethod, ExporterMethod exporterMethod,Filters* filters, Formatter** formatter, ExporterColumns** columns){
+void initProcessParams(ParserMethod parserMethod, ExporterMethod exporterMethod, Filters *filters,
+                       Formatter **formatter, ExporterColumns **columns) {
     processParams = malloc(sizeof *processParams);
-    processParams->extractorMethod = extractorMethod;
+    processParams->parserMethod = parserMethod;
     processParams->exporterMethod = exporterMethod;
     processParams->filters = filters;
     processParams->formatter = *formatter;
     processParams->columns = *columns;
 }
 
-ProcessResult process(){
-    processorDebugLogger("Calling extractorMethod [event:process]");
+ProcessResult process() {
+    processorDebugLogger("Calling parserMethod [event:process]");
     Data *data;
-    ExtractorResult resultExtractor = processParams->extractorMethod(&data);
+    ParserResult resultParser = processParams->parserMethod(&data);
 
-    if(resultExtractor != EXTRACTOR_RESULT_OK){
-        return PROCESS_ERROR_EXTRACTOR;
+    if (resultParser != PARSER_RESULT_OK) {
+        return PROCESS_ERROR_PARSER;
     }
-    
+
     processorDebugLogger("Calling filters [event:process]");
     Data *filteredData = malloc(sizeof *filteredData);
-    executeFilters(data,&filteredData);
+    FilterResult resultFilter = executeFilters(data, &filteredData);
+
+    if (resultFilter != FILTER_RESULT_OK) {
+        return PROCESS_ERROR_FILTER;
+    }
 
     processorDebugLogger("Calling exportMethod [event:process]");
     ExporterParams *exporterParams = buildExporterParams();
-    ExportResult resultExport = processParams->exporterMethod(&filteredData,exporterParams);
+    ExportResult resultExport = processParams->exporterMethod(&filteredData, exporterParams);
 
-    if(resultExport != EXPORT_RESULT_OK){
+    if (resultExport != EXPORT_RESULT_OK) {
         return PROCESS_ERROR_EXPORTER;
     }
 
     return PROCESS_OK;
 }
 
-ExporterParams* buildExporterParams(){
+ExporterParams *buildExporterParams() {
     ExporterParams *ep = malloc(sizeof *ep);
     ep->columns = processParams->columns;
     ep->formatter = processParams->formatter;
@@ -51,11 +56,14 @@ ExporterParams* buildExporterParams(){
     return ep;
 }
 
-FilterResult executeFilters(Data* data, Data* filteredData){
-    for(int i = 0 ; i< processParams->filters->filter_list_length ; i++){
+FilterResult executeFilters(Data *data, Data *filteredData) {
+    for (int i = 0; i < processParams->filters->filter_list_length; i++) {
 
-       Filter execFilter = processParams->filters->filter_list[i];
-       execFilter(data,filteredData);
+        Filter execFilter = processParams->filters->filter_list[i];
+        FilterResult result = execFilter(data, filteredData);
+        if (result != FILTER_RESULT_OK) {
+            return result;
+        }
     }
     return FILTER_RESULT_OK;
 }
