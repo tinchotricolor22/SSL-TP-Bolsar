@@ -1,7 +1,7 @@
 #include "exporter.h"
 #include "stdio.h"
 
-ExportResult exportLeadersStdout(Data *data, ExporterParams *params) {
+ExportResult exportLeadersStdout(ParserOutput *data, ExporterParams *params) {
     exporterDebugLogger("Starting export in stdout [event:exportLeadersStdout]");
 
     writeCSVFileWithData(stdout, data, params->columns);

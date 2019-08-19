@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "../config/config.h"
+#include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
 #include "../utils/commons.h"
@@ -68,6 +69,7 @@ void makeID(char *htmlID, const char *ID) {
 void searchPropertyID(FILE *htmlFile, char *htmlLine, const char *propertyID) {
     parserDebugLogger("Searching %s table", propertyID);
     while (!feof(htmlFile)) {
+        parserDebugLogger("entra al while");
         fgets(htmlLine, 40000, htmlFile);
         if (strstr(htmlLine, propertyID)) {
             parserDebugLogger("%s table founded", propertyID);

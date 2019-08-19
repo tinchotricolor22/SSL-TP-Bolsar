@@ -27,6 +27,6 @@ typedef struct ExporterParams {
 
 typedef int ExportResult;
 
-typedef ExportResult(*ExporterMethod)(Data *, ExporterParams *);
+typedef ExportResult(*ExporterMethod)(ParserOutput *, ExporterParams *);
 
 #endif

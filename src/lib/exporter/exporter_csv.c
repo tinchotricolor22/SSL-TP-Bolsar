@@ -4,7 +4,7 @@
 #include "string.h"
 #include "stdio.h"
 
-ExportResult exportLeadersCSV(Data *data, ExporterParams *params) {
+ExportResult exportLeadersCSV(ParserOutput *data, ExporterParams *params) {
     exporterDebugLogger("Starting export in CSV format [event:exportLeadersCSV]");
     char outputPath[PATH_LIMIT];
     getOutPutPath(outputPath, CSV_EXTENSION);
@@ -23,7 +23,7 @@ ExportResult exportLeadersCSV(Data *data, ExporterParams *params) {
     return EXPORT_RESULT_OK;
 }
 
-void writeCSVFileWithData(FILE *output, Data *data, ExporterColumns *columns) {
+void writeCSVFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns) {
     exporterDebugLogger("Building and writing headers [event:writeCSVFileWithData]");
     char headers[LINE_LIMIT];
     buildLeaderCSVHeaders(columns, headers);

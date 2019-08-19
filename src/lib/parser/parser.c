@@ -16,40 +16,21 @@
 #define SUFFIX_MIN_PRICE "3_PMIN"
 
 void initParser(Logger debugLogger) {
-    UserOS = getUserOS();
-    FSPath = getParserFSPath();
-    URL = getParserURL();
     parserDebugLogger = debugLogger;
 }
 
-ParserResult extractDataWithOnlineMethod(Data **data) {
-    parserDebugLogger("Starting to extract data with online method [event:extractDataWithOnlineMethod]");
-    return PARSER_RESULT_OK;
-}
-
-ParserResult extractDataWithFSMethod(Data **data) {
-    parserDebugLogger("Starting to extract data with filesystem method [event:extractDataWithFSMethod]");
-    FILE *file;
-
-    parserDebugLogger("Opening file in filesystem path: %s [event:extractDataWithFSMethod]", FSPath);
-    file = fopen(FSPath, "r");
-
-    if (file == NULL) {
-        parserDebugLogger("ERROR: Cannot open file in path: %s [event:extractDataWithFSMethod]", FSPath);
-        return PARSER_RESULT_ERROR_OPENING_FILE;
-    }
-
+ParserResult parseDataFromHTML(ParserOutput **data, ParserInput* parserInput) {
     Tag **tags = malloc(TAGS_MAX_LENGTH * sizeof tags[0]);
     int tags_length = 0;
 
-    parseTagsFromHTML(file, tags, &tags_length, TAGS_MAX_LENGTH, TABLE_ACTIONS_ID);
-    fclose(file);
+    parseTagsFromHTML(parserInput->file, tags, &tags_length, TAGS_MAX_LENGTH, TABLE_ACTIONS_ID);
+    fclose(parserInput->file);
 
     Leader **leaders = malloc(LEADERS_MAX_LENGTH * sizeof leaders[0]);
     int leaders_length = 0;
     fillLeadersFromTags(tags, tags_length, leaders, &leaders_length);
 
-    *data = createData(leaders, leaders_length);
+    *data = createParserOutput(leaders, leaders_length);
     return PARSER_RESULT_OK;
 }
 
@@ -96,14 +77,20 @@ void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, in
     }
 }
 
-Data *createData(Leader **leaders, const int length) {
-    Data *newData = malloc(sizeof *newData);
+ParserOutput *createParserOutput(Leader **leaders, const int length) {
+    ParserOutput *newData = malloc(sizeof *newData);
     newData->leaders = leaders;
     newData->leaders_length = length;
     return newData;
 }
 
-/*Data* extractValuesFromRowsID(char rows[400][400],char *id_suffix){
+ParserInput* buildParserInputFromDataOutput(DataOutput* dataOutput){
+    ParserInput *newInput = malloc(sizeof *newInput);
+    newInput->file = dataOutput->file;
+    return newInput;
+}
+
+/*ParserOutput* extractValuesFromRowsID(char rows[400][400],char *id_suffix){
     parserDebugLogger("Starting to extract values from row ID [event:extractRowsFromTable]");
     void* ret[400];
 
@@ -139,7 +126,7 @@ void trim(const char *input, char *result)
 }
 
 void replace(char *input, const char character, const char replace)
-{   
+{
   for (int i = 0; input[i] != '\0'; i++) {
     if (input[i] == character){
         input[i] = replace;
