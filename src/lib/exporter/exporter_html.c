@@ -1,4 +1,5 @@
 #include "exporter.h"
+#include "string.h"
 #include "../formatter/formattertypes.h"
 #include "../utils/commons.h"
 
@@ -102,11 +103,16 @@ void buildLeaderHTMLTableHeader(char *headers, ExporterColumns *leaderColumns) {
 }
 
 void buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Formatter *formatter) {
-    formatter->formatCondition(formatter, leader);
-
     char buffer[LINE_LIMIT];
     strcpy(line, "");
-    writeStringHTMLTableRowTagsOpeningAndApplyFormats(line, formatter->format_list, formatter->format_list_length);
+
+    if(formatter != NULL){
+        formatter->formatCondition(formatter, leader);
+        writeStringHTMLTableRowTagsOpeningAndApplyFormats(line, formatter->format_list, formatter->format_list_length);
+    }else{
+        writeStringHTMLTableRowTagsOpening(line);
+    }
+
     if (leaderColumns->specie) {
         writeStringHTMLTableColumnTagsOpening(line);
         sprintf(buffer, "%s", leader->specie);

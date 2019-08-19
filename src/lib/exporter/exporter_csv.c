@@ -4,22 +4,22 @@
 #include "string.h"
 #include "stdio.h"
 
-ExportResult exportLeadersCSV(ParserOutput *data, ExporterParams *params) {
-    exporterDebugLogger("Starting export in CSV format [event:exportLeadersCSV]");
+ExportResult exportCSV(ParserOutput *data, ExporterParams *params) {
+    exporterDebugLogger("Starting export in CSV format [event:exportCSV]");
     char outputPath[PATH_LIMIT];
     getOutPutPath(outputPath, CSV_EXTENSION);
-    exporterDebugLogger("Opening file in path %s [event:exportLeadersCSV]", outputPath);
+    exporterDebugLogger("Opening file in path %s [event:exportCSV]", outputPath);
     FILE *csvFile = fopen(outputPath, "w");
 
     if (csvFile == NULL) {
-        exporterDebugLogger("ERROR: Opening file in path %s [event:exportLeadersCSV]", outputPath);
+        exporterDebugLogger("ERROR: Opening file in path %s [event:exportCSV]", outputPath);
         return EXPORT_RESULT_ERROR;
     }
 
     writeCSVFileWithData(csvFile, data, params->columns);
     fclose(csvFile);
 
-    exporterDebugLogger("Export of CSV succesfully [event:exportLeadersCSV]");
+    exporterDebugLogger("Export of CSV succesfully [event:exportCSV]");
     return EXPORT_RESULT_OK;
 }
 

@@ -1,5 +1,4 @@
 #include "processor.h"
-#include "../parser/parsertypes.h"
 #include "../exporter/exportertypes.h"
 #include "../filter/filter.h"
 #include "stdio.h"
@@ -72,12 +71,14 @@ ExporterParams *buildExporterParams() {
 }
 
 FilterResult executeFilters(ParserOutput *data, FilterOutput *filteredData) {
-    for (int i = 0; i < processParams->filters->filter_list_length; i++) {
+    if(processParams -> filters != NULL){
+        for (int i = 0; i < processParams->filters->filter_list_length; i++) {
 
-        Filter execFilter = processParams->filters->filter_list[i];
-        FilterResult result = execFilter(data, filteredData);
-        if (result != FILTER_RESULT_OK) {
-            return result;
+            Filter execFilter = processParams->filters->filter_list[i];
+            FilterResult result = execFilter(data, filteredData);
+            if (result != FILTER_RESULT_OK) {
+                return result;
+            }
         }
     }
     return FILTER_RESULT_OK;

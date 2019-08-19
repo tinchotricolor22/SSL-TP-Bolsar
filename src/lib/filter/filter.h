@@ -20,6 +20,6 @@ FilterResult filterMajor05Variation(ParserOutput *data, ParserOutput *filteredDa
 
 int major05Variation(Leader *leader);
 
-Filters *buildLeaderFilters();
+Filters *buildLeaderFilters(Filter *filter);
 
 #endif

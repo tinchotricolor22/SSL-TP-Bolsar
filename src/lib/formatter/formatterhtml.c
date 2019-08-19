@@ -1,5 +1,6 @@
 //Cambiar nombre a formatter_leader
 #include "formatter.h"
+#include "stdlib.h"
 #include "formattertypes.h"
 #include "../utils/commons.h"
 
@@ -23,13 +24,13 @@ int buildLeaderRedTRCondition(Formatter *formatter, Leader *leader) {
     return FALSE;
 }
 
-Formatter *buildLeaderFormatter() {
+Formatter *buildLeaderFormatter(int (*formatCondition)(struct Formatter *, void *)) {
     Formatter *formatter = malloc(sizeof *formatter);
 
     Format **formats = malloc(MAX_FORMATS * sizeof formats[0]);
     formatter->format_list = formats;
     formatter->format_list_length = 0;
-    formatter->formatCondition = buildLeaderRedTRCondition;
+    formatter->formatCondition = formatCondition;
     return formatter;
 }
 

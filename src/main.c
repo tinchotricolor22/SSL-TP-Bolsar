@@ -8,6 +8,7 @@
 #include "lib/filter/filter.h"
 #include "lib/formatter/formatter.h"
 #include "lib/exporter/exporter.h"
+#include "lib/preferences/preferences.h"
 
 #define DEBUG 1
 
@@ -17,7 +18,11 @@ void initMain(Logger debugLogger);
 
 void init();
 
-void processorMethods(Option optionMethod, Option optionExport);
+void customProcessorInjection(Option optionMethod, Option optionExport);
+
+void defaultReportsProcessorInjection(Option optionReport);
+
+int optionMenus();
 
 DataMethod dataMethod(Option optionMethod);
 
@@ -34,19 +39,11 @@ Filters *filters();
 int main() {
     init();
 
-    mainDebugLogger("Starting method options [event:main]");
-    Option optionMethod = methodOptionsMenu();
-    if (optionMethod == EXIT) {
+    mainDebugLogger("Starting preferences options [event:main]");
+    Option result = optionMenus();
+    if (result == EXIT) {
         return 0;
     }
-
-    Option optionExport = exportOptionsMenu();
-    if (optionExport == EXIT) {
-        return 0;
-    }
-
-    mainDebugLogger("Preparing processor [event:main]");
-    processorMethods(optionMethod, optionExport);
 
     mainDebugLogger("Processing [event:main]");
     ProcessResult processResult = process();
@@ -83,20 +80,73 @@ void initMain(Logger debugLogger) {
     mainDebugLogger = debugLogger;
 }
 
-//processorMethods instance parser and exporter option
-void processorMethods(Option optionMethod, Option optionExport) {
+int optionMenus() {
+    Option optionReports = reportsOptionMenu();
+    if (reportsOptionMenu == EXIT) {
+        return 0;
+    }
+
+    Option optionMethod, optionExport;
+
+    if (optionReports == REPORT_CUSTOM) {
+        optionMethod = methodOptionsMenu();
+        if (optionMethod == EXIT) {
+            return 0;
+        }
+
+        optionExport = exportOptionsMenu();
+        if (optionExport == EXIT) {
+            return 0;
+        }
+
+        mainDebugLogger("Preparing processor for custom preferences [event:main]");
+        customProcessorInjection(optionMethod, optionExport);
+
+    } else {
+        mainDebugLogger("Preparing processor for default preferences [event:main]");
+        defaultReportsProcessorInjection(optionReports);
+    }
+}
+
+void defaultReportsProcessorInjection(Option optionReports) {
+    ProcessParams *processParams;
+
+    switch (optionReports) {
+        case REPORT_LEADERS_05_VARIATION_SCREEN:
+            processParams = defaultLeaders05VariationScreen();
+            break;
+        case REPORT_LEADERS_05_VARIATION_HTML:
+            processParams = defaultLeaders05VariationHTML();
+            break;
+        case REPORT_LEADERS_SALE_PURCHASE_CSV:
+            processParams = defaultLeadersSalePurchaseCSV();
+            break;
+    }
+
+    initProcessParams(processParams->dataMethod,
+                      processParams->parserMethod,
+                      processParams->exporterMethod,
+                      processParams->filters == NULL ? NULL : processParams->filters,
+                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      &processParams->columns);
+}
+
+//customProcessorInjection instance parser and exporter option
+void customProcessorInjection(Option optionMethod, Option optionExport) {
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", optionMethod,
                     optionExport);
 
-    DataMethod dataParam = dataMethod(optionMethod);
-    ParserMethod parserParam = parser();
-    ExporterMethod exporterParam = exporterMethod(optionExport);
-    Filters *filtersParam = filters();
-    ExporterColumns *columsParam = columns();
-    Formatter *formatterParam = formatter();
+    ProcessParams *processParams = defaultPreferences();
 
+    processParams->dataMethod = dataMethod(optionMethod);
+    processParams->exporterMethod = exporterMethod(optionExport);
 
-    initProcessParams(dataParam, parserParam, exporterParam, filtersParam, &formatterParam, &columsParam);
+    initProcessParams(processParams->dataMethod,
+                      processParams->parserMethod,
+                      processParams->exporterMethod,
+                      processParams->filters == NULL ? NULL : processParams->filters,
+                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      &processParams->columns);
 }
 
 //dataMethod selects data get strategy
@@ -116,7 +166,7 @@ DataMethod dataMethod(Option optionMethod) {
 ExporterMethod exporterMethod(Option optionMethod) {
     switch (optionMethod) {
         case EXPORT_CSV:
-            return exportLeadersCSV;
+            return exportCSV;
             break;
 
         case EXPORT_HTML:
@@ -124,28 +174,7 @@ ExporterMethod exporterMethod(Option optionMethod) {
             break;
 
         default:
-            return exportLeadersStdout;
+            return exportStdout;
             break;
     }
 }
-
-//parserMethod selects parser strategy
-ParserMethod parser() {
-    return parseDataFromHTML;
-}
-
-ExporterColumns *columns() {
-    return buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
-}
-
-Formatter *formatter() {
-    return buildLeaderFormatter();
-}
-
-Filters *filters() {
-    return buildLeaderFilters();
-}
-
-
-/*ExporterMethod filterOptions(Option optionMethod){
-}*/

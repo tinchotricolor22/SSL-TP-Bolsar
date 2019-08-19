@@ -27,11 +27,11 @@ Logger exporterDebugLogger;
 //initExporter injects dependency variables for exporter that includes logger functions
 void initExporter(Logger debugLogger);
 
-ExportResult exportLeadersCSV(ParserOutput *, ExporterParams *params);
+ExportResult exportCSV(ParserOutput *, ExporterParams *params);
 
 ExportResult exportHTML(ParserOutput *, ExporterParams *params);
 
-ExportResult exportLeadersStdout(ParserOutput *, ExporterParams *params);
+ExportResult exportStdout(ParserOutput *, ExporterParams *params);
 
 //Common
 void getOutPutPath(char *output, const char *extension);
