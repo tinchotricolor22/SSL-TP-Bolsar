@@ -5,6 +5,7 @@
 #include "lib/ui/ui.h"
 #include "lib/processor/processor.h"    
 #include "lib/extractor/extractor.h"
+#include "lib/filter/filter.h"
 #include "lib/formatter/formatter.h"
 #include "lib/exporter/exporter.h"
 
@@ -21,6 +22,7 @@ ExtractorMethod extractorMethod(Option optionMethod);
 ExporterMethod exporterMethod(Option optionMethod);
 ExporterColumns* columns();
 Formatter* formatter();
+Filters* filters();
 
 int main(){
     init();
@@ -80,10 +82,12 @@ void processorMethods(Option optionMethod,Option optionExport){
 
     ExtractorMethod extractor = extractorMethod(optionMethod);
     ExporterMethod exporter = exporterMethod(optionExport);
+    Filters* filts = filters();
     ExporterColumns* cols = columns();
     Formatter* formatt = formatter();
+    
 
-    initProcessParams(extractor,exporter,&formatt,&cols);
+    initProcessParams(extractor,exporter,filts,&formatt,&cols);
 }
 
 //extractorOption selects extractor strategy
@@ -125,6 +129,10 @@ ExporterColumns* columns(){
 Formatter* formatter(){
     return buildLeaderFormatter();
 }
+
+Filters* filters(){
+    return buildLeaderFilters();
+}  
 
 /*ExporterMethod filterOptions(Option optionMethod){
 }*/
