@@ -238,7 +238,6 @@ void writeStringHTMLTableBodyTagsClosing(char* output){
 }
 
 void writeStringHTMLTableRowTagsOpeningAndApplyFormats(char* output,Format **format_list, int format_list_length){
-    printf("length de la lista %d: \n",format_list_length);
     foreach(format_list,format_list_length,writePropertyAndValueInTableRowTagOpening,output);
 }
 

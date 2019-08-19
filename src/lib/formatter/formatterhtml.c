@@ -1,3 +1,4 @@
+//Cambiar nombre a formatter_leader
 #include "formatter.h"
 #include "formattertypes.h"
 #include "../utils/commons.h"
@@ -6,7 +7,6 @@
 #define TRUE 1
 
 int buildLeaderRedTRCondition(Formatter* formatter , Leader* leader){
-    printf("Antes de hacer el init de la list\n");
     init_list(formatter->format_list,&(formatter->format_list_length),MAX_FORMATS);
 
     if (leader->purchasePrice > leader->openingPrice && 
@@ -16,7 +16,6 @@ int buildLeaderRedTRCondition(Formatter* formatter , Leader* leader){
             format->value = "red";
             format->apply_component = COMPONENT_TR;
 
-            printf("antes de agregar el format\n");
             add(formatter->format_list,format,&(formatter->format_list_length),MAX_FORMATS);
 
         return TRUE;
