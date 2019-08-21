@@ -1,17 +1,17 @@
-#include "../extractor/extractor.h"
-#include "../exporter/exporter.h"
+#include "processortypes.h"
 #include "../logging/logging.h"
 
-
-#define PROCESS_OK 0
-#define PROCESS_ERROR_EXTRACTOR 1
-#define PROCESS_ERROR_EXPORTER 2
-
-ExtractorMethod extractorMethod;
-ExporterMethod exporterMethod;
-
-typedef int ProcessResult;
+ProcessParams *processParams;
 
 void initProcessor(Logger processorDebugLoggerArg);
-void initProcessorMethods(ExtractorMethod extractorMethodArg,ExporterMethod exporterMethodArg);
+
+void initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filters *filters,
+                       Formatter **formatter, ExporterColumns **columns);
+
+FilterResult executeFilters(ParserOutput *data, FilterOutput **filteredData);
+
+ExporterParams *buildExporterParams();
+
 ProcessResult process();
+
+void closeResources(DataOutput *dataData);

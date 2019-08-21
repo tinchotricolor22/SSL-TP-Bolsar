@@ -2,4 +2,7 @@
 *-workspace
 *aux*
 src/output/*
+executable
 scratch/
+/cmake-build-debug/
+.idea/
