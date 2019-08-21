@@ -4,8 +4,6 @@
 #include "datatypes.h"
 #include "../logging/logging.h"
 
-char *UserOS;
-char *URL;
 char *FSPath;
 
 Logger dataDebugLogger;

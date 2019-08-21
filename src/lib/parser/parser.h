@@ -39,3 +39,4 @@ double extractDoubleValue(char* stringDouble);
 
 void trim(const char *input, char *result);
 void replace(char *input, const char character, const char replace);
+int ends_with(const char *str, const char *suffix);

@@ -19,10 +19,13 @@ typedef struct Filters {
 } Filters;
 
 FilterResult filterMajor05Variation(ParserOutput *data, ParserOutput **filteredData);
+FilterResult filterNoRepeated(ParserOutput *data, FilterOutput **filteredData); //TODO: Parche provisorio
 
 int major05Variation(Leader *leader);
 
-Filters *buildLeaderFilters(Filter *filter);
+int noRepeated(Leader *leader);
+Filters *buildLeaderFilters();
 FilterOutput *buildFilterOutput();
+void addFilter(Filters* filters, Filter *filter);
 
 #endif
