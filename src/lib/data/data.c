@@ -3,9 +3,7 @@
 #include "stdlib.h"
 
 void initData(Logger debugLogger) {
-    UserOS = getUserOS();
-    FSPath = getParserFSPath();
-    URL = getParserURL();
+    FSPath = getDataFSPath();
     dataDebugLogger = debugLogger;
 }
 

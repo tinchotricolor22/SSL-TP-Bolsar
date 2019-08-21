@@ -9,7 +9,7 @@
 
 #define ID_SPECIE "spPopSimbolo"
 #define SUFFIX_VARIATION "3_VAR"
-#define SUFFIX_PURCHASE_PRICE "3_PU"
+#define SUFFIX_PURCHASE_PRICE "3_PC"
 #define SUFFIX_SALE_PRICE "3_PV"
 #define SUFFIX_OPENING_PRICE "3_PAPE"
 #define SUFFIX_MAX_PRICE "3_PMAX"
@@ -46,22 +46,22 @@ void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, in
 
             add(leaders, newLeader, leaders_length, LEADERS_MAX_LENGTH);
             actualProcessingLeader = newLeader;
-        } else if (strstr(tags[countTags]->id, SUFFIX_VARIATION)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_VARIATION)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->variation = value;
-        } else if (strstr(tags[countTags]->id, SUFFIX_PURCHASE_PRICE)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_PURCHASE_PRICE)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->purchasePrice = value;
-        } else if (strstr(tags[countTags]->id, SUFFIX_SALE_PRICE)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_SALE_PRICE)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->salePrice = value;
-        } else if (strstr(tags[countTags]->id, SUFFIX_OPENING_PRICE)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_OPENING_PRICE)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->openingPrice = value;
-        } else if (strstr(tags[countTags]->id, SUFFIX_MAX_PRICE)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_MAX_PRICE)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->maxPrice = value;
-        } else if (strstr(tags[countTags]->id, SUFFIX_MIN_PRICE)) {
+        } else if (ends_with(tags[countTags]->id, SUFFIX_MIN_PRICE)) {
             double value = extractDoubleValue(tags[countTags]->value);
             actualProcessingLeader->minPrice = value;
         }
@@ -104,4 +104,15 @@ void replace(char *input, const char character, const char replace) {
             input[i] = replace;
         }
     }
+}
+
+int ends_with(const char *str, const char *suffix)
+{
+    if (!str || !suffix)
+        return 0;
+    size_t lenstr = strlen(str);
+    size_t lensuffix = strlen(suffix);
+    if (lensuffix >  lenstr)
+        return 0;
+    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
 }

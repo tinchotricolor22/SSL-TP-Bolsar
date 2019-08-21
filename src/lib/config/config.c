@@ -5,18 +5,8 @@ void initConfig(Logger debugLogger) {
     configDebugLogger = debugLogger;
 }
 
-//getUserOS returns user's Operating System
-char *getUserOS() {
-    configDebugLogger("Getting user OS [event:getUserOS]");
-    return "macOS";
-}
-
-char *getParserFSPath() {
+char *getDataFSPath() {
     return "src/resources/lideres_bcba.html";
-}
-
-char *getParserURL() {
-    return "http://tpssl.rf.gd/lideres_bcba.html";
 }
 
 char *getAuxTableFileName() {
