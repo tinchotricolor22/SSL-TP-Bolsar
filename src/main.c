@@ -26,15 +26,9 @@ int optionMenus();
 
 DataMethod dataMethod(Option optionMethod);
 
-ParserMethod parser();
-
 ExporterMethod exporterMethod(Option optionMethod);
 
-ExporterColumns *columns();
-
 Formatter *formatter();
-
-Filters *filters();
 
 int main() {
     init();
