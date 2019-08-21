@@ -6,7 +6,7 @@
 #include "../formatter/formatter.h"
 
 ProcessParams* defaultLeaders05VariationScreen(){
-    ProcessParams *processParams = malloc(sizeof processParams);
+    ProcessParams *processParams = malloc(sizeof *processParams);
 
     processParams->dataMethod = getDataWithFSMethod;//TODO: cambiar a online
     processParams->parserMethod = parseDataFromHTML;
@@ -18,7 +18,7 @@ ProcessParams* defaultLeaders05VariationScreen(){
 }
 
 ProcessParams* defaultLeaders05VariationHTML(){
-    ProcessParams *processParams = malloc(sizeof processParams);
+    ProcessParams *processParams = malloc(sizeof *processParams);
 
     processParams->dataMethod = getDataWithFSMethod;//TODO: cambiar a online
     processParams->parserMethod = parseDataFromHTML;
@@ -31,18 +31,18 @@ ProcessParams* defaultLeaders05VariationHTML(){
 }
 
 ProcessParams* defaultLeadersSalePurchaseCSV(){
-    ProcessParams *processParams = malloc(sizeof processParams);
+    ProcessParams *processParams = malloc(sizeof *processParams);
 
     processParams->dataMethod = getDataWithFSMethod;//TODO: cambiar a online
     processParams->parserMethod = parseDataFromHTML;
     processParams->exporterMethod = exportCSV;
-    processParams->columns = buildLeaderColumns(1,0,0,0,0,0,0);
+    processParams->columns = buildLeaderColumns(1,1,1,1,1,1,1);
 
     return processParams;
 }
 
 ProcessParams* defaultPreferences(){
-    ProcessParams *processParams = malloc(sizeof processParams);
+    ProcessParams *processParams = malloc(sizeof *processParams);
 
     processParams->dataMethod = getDataWithFSMethod;//TODO: cambiar a online
     processParams->parserMethod = parseDataFromHTML;

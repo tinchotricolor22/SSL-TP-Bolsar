@@ -82,7 +82,7 @@ void initMain(Logger debugLogger) {
 
 int optionMenus() {
     Option optionReports = reportsOptionMenu();
-    if (reportsOptionMenu == EXIT) {
+    if (optionReports == EXIT) {
         return 0;
     }
 

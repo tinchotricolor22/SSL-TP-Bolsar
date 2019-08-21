@@ -8,7 +8,7 @@ void initProcessor(Logger processorDebugLoggerArg);
 void initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filters *filters,
                        Formatter **formatter, ExporterColumns **columns);
 
-FilterResult executeFilters(ParserOutput *data, FilterOutput *filteredData);
+FilterResult executeFilters(ParserOutput *data, FilterOutput **filteredData);
 
 ExporterParams *buildExporterParams();
 
