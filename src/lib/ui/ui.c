@@ -46,6 +46,26 @@ Option exportOptionsMenu() {
     return exportOption;
 }
 
+Option reportsOptionMenu() {
+    Option reportOption;
+    uiLogger("Reports\n");
+    uiLogger("%d- Leaders >0.5 variation (In screen)\n", REPORT_LEADERS_05_VARIATION_SCREEN);
+    uiLogger("%d- Leaders >0.5 variation (HTML)\n", REPORT_LEADERS_05_VARIATION_HTML);
+    uiLogger("%d- Leaders sale/purchase (CSV) \n", REPORT_LEADERS_SALE_PURCHASE_CSV);
+    uiLogger("%d- Custom\n", REPORT_CUSTOM);
+    uiLogger("%d- Exit\n", EXIT);
+    uiLogger("Select an option: ");
+    scanf("%d", &reportOption);
+
+    //Default
+    if (reportOption != EXIT && reportOption != REPORT_LEADERS_05_VARIATION_SCREEN && reportOption != REPORT_LEADERS_05_VARIATION_HTML &&
+         reportOption!= REPORT_LEADERS_SALE_PURCHASE_CSV && reportOption != REPORT_CUSTOM) {
+        reportOption = EXIT;
+    }
+
+    return reportOption;
+}
+
 void printFinalErrorMessage(int errorCode) {
     uiLogger("The process finalize with error code: %d\n", errorCode);
 }

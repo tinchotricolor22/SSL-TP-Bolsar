@@ -11,6 +11,12 @@
 #define EXPORT_HTML 2
 #define EXPORT_STDOUT 3
 
+// Reports
+#define REPORT_LEADERS_05_VARIATION_SCREEN 1
+#define REPORT_LEADERS_05_VARIATION_HTML 2
+#define REPORT_LEADERS_SALE_PURCHASE_CSV 3
+#define REPORT_CUSTOM 4
+
 typedef int Option;
 
 void initUI(Logger stdLogger);
@@ -18,6 +24,8 @@ void initUI(Logger stdLogger);
 Option methodOptionsMenu();
 
 Option exportOptionsMenu();
+
+Option reportsOptionMenu();
 
 void printFinalErrorMessage(int errorCode);
 

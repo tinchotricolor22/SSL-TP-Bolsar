@@ -4,7 +4,6 @@
 #include "stdio.h"
 
 #define TAGS_MAX_LENGTH 1000
-#define LEADERS_MAX_LENGTH 1000
 
 #define TABLE_ACTIONS_ID "tbAcciones"
 

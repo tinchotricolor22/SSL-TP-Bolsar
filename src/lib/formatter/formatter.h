@@ -4,4 +4,4 @@
 
 int buildLeaderRedTRCondition(Formatter *formatter, Leader *leader);
 
-Formatter *buildLeaderFormatter();
+Formatter *buildLeaderFormatter(int (*formatCondition)(struct Formatter *, void *));
