@@ -35,14 +35,11 @@ ParserResult parseDataFromHTML(ParserOutput **data, ParserInput *parserInput) {
 }
 
 void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, int *leaders_length) {
-    parserDebugLogger("Starting to fill leaders [event:fillLeadersFromRows]");
+    parserDebugLogger("Starting to fill %d leaders [event:fillLeadersFromRows]",tags_length);
     Leader *actualProcessingLeader;
-
-    parserDebugLogger("tags length: %d [event:fillLeadersFromRows]", tags_length);
 
     for (int countTags = 0; countTags < tags_length; countTags++) {
         if (!strcmp(tags[countTags]->id, ID_SPECIE)) {
-            parserDebugLogger("matchea el value: %s \n", tags[countTags]->value);
             Leader *newLeader = malloc(sizeof *newLeader);
             char* specie = tags[countTags]->value;
             strcpy(newLeader->specie, specie);
