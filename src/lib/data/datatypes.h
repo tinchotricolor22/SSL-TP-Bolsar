@@ -12,6 +12,6 @@ typedef struct DataOutput{
 
 typedef int DataResult;
 
-typedef DataResult (*DataMethod)(DataOutput*);
+typedef DataResult (*DataMethod)(DataOutput**);
 
 #endif
