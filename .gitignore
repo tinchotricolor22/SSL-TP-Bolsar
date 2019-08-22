@@ -1,7 +1,7 @@
 *.DS_Store
 *-workspace
 *aux*
-src/output/*
+output/*
 executable
 scratch/
 /cmake-build-debug/

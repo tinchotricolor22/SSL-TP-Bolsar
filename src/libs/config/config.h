@@ -2,11 +2,11 @@
 #define CONFIG_HEADER
 
 #if defined(_WIN32) || defined(_WIN64)
-const char* os = "Windoze";
+#define OS "WINDOWS"
 #define ONLINE_CMD ".\\GnuWin32\\bin\\wget -q --user-agent=\"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36\" -O - http://52.67.191.9/SSL/lideres-bcba.html"
 #else
 #if defined(__linux)
-const char* os = "Linux";
+#define OS "LINUX"
 #define ONLINE_CMD "wget -q -O - http://52.67.191.9/SSL/lideres-bcba.html"
 #else
 #if defined(__APPLE__) || defined(__MACH__)
@@ -22,14 +22,11 @@ Logger configDebugLogger;
 
 void initConfig(Logger debugLogger);
 
-//getUserOS returns user's Operating System 
-char *getUserOS();
-
 //getDataFSPath returns file system path
 char *getDataFSPath();
 
-//getParserURL returns URL to connect the parser
-char *getParserURL();
+//getParserCMD returns the command to get data from server
+char *getParserCMD();
 
 char *getAuxTableFileName();
 

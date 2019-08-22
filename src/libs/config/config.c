@@ -5,16 +5,20 @@ void initConfig(Logger debugLogger) {
     configDebugLogger = debugLogger;
 }
 
+char *getParserCMD(){
+    return "";
+}
+
 char *getDataFSPath() {
-    return "src/resources/lideres_bcba.html";
+    return "resources/lideres_bcba.html";
 }
 
 char *getAuxTableFileName() {
-    return "src/output/aux_table_file.txt";
+    return "output/aux_table_file.txt";
 }
 
 char *getExporterOutputPath() {
-    return "src/output/lideres_bcba_result";
+    return "output/lideres_bcba_result";
 }
 
 char *getCSVDelimiter() {
