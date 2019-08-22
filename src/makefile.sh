@@ -20,4 +20,4 @@ done
 
 gcc -c main.c -o 'output/main.o'
 executableFiles="$executableFiles output/main.o"
-gcc -o executable $executableFiles
+gcc -o webscrapping.exe $executableFiles

@@ -10,7 +10,7 @@
 #include "lib/exporter/exporter.h"
 #include "lib/preferences/preferences.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 Logger mainDebugLogger;
 

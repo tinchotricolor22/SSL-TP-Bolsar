@@ -5,26 +5,14 @@
 #include "string.h"
 #include "../utils/commons.h"
 
-void parseTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id) {
+void parseTagsFromHTML(FILE *file, char tdTags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_length, const int tags_max_length) {
     parserDebugLogger("Starting to process htmlFile [event:parseTagsFromHTML]");
-    char *table = parseHTMLFromTableID(init_id, file);
-    FILE *tableFile = createAuxFileFromString(table, getAuxTableFileName());
+    searchTable(file,tdTags,tags_length);
 
-    parseTagsFromTable(tableFile, tags, tags_length, tags_max_length);
-    fclose(tableFile);
+//    parseTagsFromTable(tableFile, tags, tags_length, tags_max_length);
 }
 
-char *parseHTMLFromTableID(char *ID, FILE *htmlFile) {
-    parserDebugLogger("Starting to extract table from htmlFile [event:parseHTMLFromTableID]");
-    char htmlLine[TABLE_CHAR_LENGTH], propertyID[ID_LENGTH];
-
-    makeID(propertyID, ID);
-    searchPropertyID(htmlFile, htmlLine, propertyID);
-
-    return htmlLine;
-}
-
-void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length) {
+/*void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int tags_max_length) {
     parserDebugLogger("Starting to extract tags from table file [event:parseTagsFromTable]");
     char rawTag[TAG_RAW_TAG], value[TAG_VALUE];
 
@@ -44,34 +32,34 @@ void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int
         add(tags, newTag, tags_length, tags_max_length);
     }
 }
+*/
 
-FILE *createAuxFileFromString(char *string, const char *auxPath) {
-    parserDebugLogger("Creating aux file to iterate table in path %s [event:createAuxFileFromString]", auxPath);
-    FILE *file = fopen(auxPath, "w+");
-
-    if (file == NULL) {
-        parserDebugLogger("ERROR: Cannot open file in path: %s [event:createAuxFileFromString]", auxPath);
-        return file;
+void searchTable(FILE *htmlFile, char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_current) {
+    parserDebugLogger("Searching table");
+    char htmlLine[TAG_CHAR_MAX_LENGTH];
+    while (!feof(htmlFile)) {
+        fgets(htmlLine, TAG_CHAR_MAX_LENGTH, htmlFile);
+        if (strstr(htmlLine, "<table border=\"1\">")) {
+            searchTag(htmlFile, htmlLine, tags, tags_current, "<td>", "</table>");
+            break;
+        }
     }
 
-    fprintf(file, "%s", string);
-    return file;
 }
 
-void makeID(char *htmlID, const char *ID) {
-    char *htmlIDAux = "id=";
-    strcat(htmlID, htmlIDAux);
-    strcat(htmlID, "\"");
-    strcat(htmlID, ID);
-    strcat(htmlID, "\"");
-}
-
-void searchPropertyID(FILE *htmlFile, char *htmlLine, const char *propertyID) {
-    parserDebugLogger("Searching %s table", propertyID);
+void searchTag(FILE *htmlFile, char *htmlLine, char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_current, const char *tagToSearch,
+               const char *closeTag) {
     while (!feof(htmlFile)) {
-        fgets(htmlLine, 40000, htmlFile);
-        if (strstr(htmlLine, propertyID)) {
-            parserDebugLogger("%s table founded", propertyID);
+        fgets(htmlLine, TAG_CHAR_MAX_LENGTH, htmlFile);
+        if (strstr(htmlLine, tagToSearch)) {
+            char *replacement;
+            replacement = str_replace(htmlLine, "<td>", "");
+            replacement = str_replace(replacement, "</td>", ";");
+            strcpy(tags[*tags_current],replacement);
+            free(replacement);
+            //free(htmlLine);
+            (*tags_current)++;
+        } else if (strstr(htmlLine, closeTag)) {
             break;
         }
     }

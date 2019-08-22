@@ -6,7 +6,7 @@ void initConfig(Logger debugLogger) {
 }
 
 char *getDataFSPath() {
-    return "src/resources/lideres_bcba.html";
+    return "src/resources/lideres_limpio.html";
 }
 
 char *getAuxTableFileName() {

@@ -55,3 +55,4 @@ add_executable(SSL_TP_Bolsar
         src/main.c)
 
 configure_file(src/resources/lideres_bcba.html src/resources/lideres_bcba.html)
+configure_file(src/resources/lideres_limpio.html src/resources/lideres_limpio.html)
