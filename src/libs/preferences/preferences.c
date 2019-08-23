@@ -57,8 +57,7 @@ ProcessParams *defaultLeadersSalePurchaseCSV() {
 ProcessParams *defaultPreferences() {
     ProcessParams *processParams = malloc(sizeof *processParams);
 
-    processParams->dataMethod = _get_data_with_fs_method;//TODO: cambiar a online
-    processParams->dataMethod = getDataWithFSMethod;
+    processParams->dataMethod = _get_data_with_fs_method;
     processParams->parserMethod = parseDataFromHTML;
     processParams->exporterMethod = exportCSV;
     processParams->columns = buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
