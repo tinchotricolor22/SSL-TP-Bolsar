@@ -1,42 +1,54 @@
 #include "stdio.h"
-#include "lib/logging/logging.h"
-#include "lib/config/config.h"
-#include "lib/ui/ui.h"
-#include "lib/processor/processor.h"
-#include "lib/data/data.h"
-#include "lib/parser/parser.h"
-#include "lib/filter/filter.h"
-#include "lib/formatter/formatter.h"
-#include "lib/exporter/exporter.h"
-#include "lib/preferences/preferences.h"
+#include "libs/logging/logging.h"
+#include "libs/config/config.h"
+#include "libs/ui/ui.h"
+#include "libs/processor/processor.h"
+#include "libs/data/data.h"
+#include "libs/parser/parser.h"
+#include "libs/formatter/formatter.h"
+#include "libs/exporter/exporter.h"
+#include "libs/preferences/preferences.h"
 
 #define DEBUG 0
 
-Logger mainDebugLogger;
+//mainDebugLogger is logger for debug mode in main file
+static Logger mainDebugLogger;
 
-void initMain(Logger debugLogger);
+//initMain initializes global variables (like logger) to use in all the lifecycle of the program
+void initMain(Logger);
 
+//init initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
 void init();
 
+//customProcessorInjection initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
+//for customs reports
 void customProcessorInjection(Option optionMethod, Option optionExport);
 
+//defaultReportsProcessorInjection initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
+//for default reports
 void defaultReportsProcessorInjection(Option optionReport);
 
+//optionsMenus calls UI and returns result code
 int optionMenus();
 
+//dataMethod selects data get strategy for custom reports
 DataMethod dataMethod(Option optionMethod);
 
+//exporterMethod returns exporter strategy for custom reports
 ExporterMethod exporterMethod(Option optionMethod);
-
-Formatter *formatter();
 
 int main() {
     init();
+    mainDebugLogger("Starting config [event:main]");
+    ResultConfig result_config = init_config();
+    if (result_config == RESULT_CONFIG_ERROR){
+        return result_config;
+    }
 
     mainDebugLogger("Starting preferences options [event:main]");
     Option result = optionMenus();
     if (result == EXIT) {
-        return 0;
+        return EXIT;
     }
 
     mainDebugLogger("Processing [event:main]");
@@ -50,7 +62,6 @@ int main() {
     return processResult;
 }
 
-//init intializes global variables like logger to use in all the lifecycle of the program
 void init() {
     Logger stdLogger = printf;
     Logger debugLogger;
@@ -62,14 +73,12 @@ void init() {
 
     initMain(debugLogger);
     initUI(stdLogger);
-    initConfig(debugLogger);
     initData(debugLogger);
     initParser(debugLogger);
     initExporter(debugLogger);
     initProcessor(debugLogger);
 }
 
-//init sets logger variables
 void initMain(Logger debugLogger) {
     mainDebugLogger = debugLogger;
 }
@@ -77,7 +86,7 @@ void initMain(Logger debugLogger) {
 int optionMenus() {
     Option optionReports = reportsOptionMenu();
     if (optionReports == EXIT) {
-        return 0;
+        return EXIT;
     }
 
     Option optionMethod, optionExport;
@@ -85,12 +94,12 @@ int optionMenus() {
     if (optionReports == REPORT_CUSTOM) {
         optionMethod = methodOptionsMenu();
         if (optionMethod == EXIT) {
-            return 0;
+            return EXIT;
         }
 
         optionExport = exportOptionsMenu();
         if (optionExport == EXIT) {
-            return 0;
+            return EXIT;
         }
 
         mainDebugLogger("Preparing processor for custom preferences [event:main]");
@@ -120,12 +129,13 @@ void defaultReportsProcessorInjection(Option optionReports) {
     initProcessParams(processParams->dataMethod,
                       processParams->parserMethod,
                       processParams->exporterMethod,
-                      processParams->filters == NULL ? NULL : processParams->filters,
+                      processParams->filters,
+                      processParams->filters_length,
                       &processParams->formatter == NULL ? NULL : &processParams->formatter,
                       &processParams->columns);
 }
 
-//customProcessorInjection instance parser and exporter option
+//customProcessorInjection creates a new processorParams depending of method and export methods selected
 void customProcessorInjection(Option optionMethod, Option optionExport) {
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", optionMethod,
                     optionExport);
@@ -138,37 +148,28 @@ void customProcessorInjection(Option optionMethod, Option optionExport) {
     initProcessParams(processParams->dataMethod,
                       processParams->parserMethod,
                       processParams->exporterMethod,
-                      processParams->filters == NULL ? NULL : processParams->filters,
+                      processParams->filters,
+                      processParams->filters_length,
                       &processParams->formatter == NULL ? NULL : &processParams->formatter,
                       &processParams->columns);
 }
 
-//dataMethod selects data get strategy
 DataMethod dataMethod(Option optionMethod) {
     switch (optionMethod) {
         case METHOD_ONLINE:
             return getDataWithOnlineMethod;
-            break;
-
         default:
             return getDataWithFSMethod;
-            break;
     }
 }
 
-//exportMetod selects exporter strategy
 ExporterMethod exporterMethod(Option optionMethod) {
     switch (optionMethod) {
         case EXPORT_CSV:
             return exportCSV;
-            break;
-
         case EXPORT_HTML:
             return exportHTML;
-            break;
-
         default:
             return exportStdout;
-            break;
     }
 }
