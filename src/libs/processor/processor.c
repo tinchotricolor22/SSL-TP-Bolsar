@@ -18,7 +18,7 @@ void init_processor(Logger processor_debug_logger_arg) {
 
 void
 init_process_params(DataMethod data_method, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
-                    int filters_length, Format **formats, int formats_length, ExporterColumns **columns) {
+                    int filters_length, Format **formats, int formats_length, ExporterColumns **p_columns) {
     g_p_process_params = malloc(sizeof *g_p_process_params);
     g_p_process_params->data_method = data_method;
     g_p_process_params->parser_method = parserMethod;
@@ -27,7 +27,7 @@ init_process_params(DataMethod data_method, ParserMethod parserMethod, ExporterM
     g_p_process_params->filters_list_length = filters_length;
     g_p_process_params->formats_conditions_list = formats;
     g_p_process_params->formats_conditions_list_length = formats_length;
-    g_p_process_params->p_columns = *columns;
+    g_p_process_params->p_columns = *p_columns;
 }
 
 ProcessResult process() {
