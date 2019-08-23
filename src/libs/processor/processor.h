@@ -5,8 +5,9 @@ ProcessParams *processParams;
 
 void initProcessor(Logger processorDebugLoggerArg);
 
-void initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters, int filters_length,
-                       Formatter **formatter, ExporterColumns **columns);
+void
+initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
+                  int filters_length, Format **formats, int formats_length, ExporterColumns **columns);
 
 ExporterParams *buildExporterParams();
 

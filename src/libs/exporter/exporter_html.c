@@ -1,6 +1,6 @@
 #include "exporter.h"
 #include "string.h"
-#include "../formatter/formattertypes.h"
+#include "../formatter/formatter.h"
 #include "../utils/commons.h"
 
 ExportResult exportHTML(ParserOutput *data, ExporterParams *params) {
@@ -15,20 +15,22 @@ ExportResult exportHTML(ParserOutput *data, ExporterParams *params) {
         return EXPORT_RESULT_ERROR;
     }
 
-    writeHTMLFileWithData(htmlFile, data, params->columns, params->formatter);
+    writeHTMLFileWithData(htmlFile, data, params->columns, params->formats_conditions, params->formats_conditions_length);
     fclose(htmlFile);
 
     exporterDebugLogger("Export of HTML succesfully [event:exportHTML]");
     return EXPORT_RESULT_OK;
 }
 
-void writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter) {
+void writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats,
+                           int formats_length) {
     writeHTMLMainTagsOpening(output);
-    writeHTMLTableWithData(output, data, columns, formatter);
+    writeHTMLTableWithData(output, data, columns, formats, formats_length);
     writeHTMLMainTagsClosing(output);
 }
 
-void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter) {
+void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats,
+                            int formats_length) {
     exporterDebugLogger("Building and writing Table [event:writeHTMLTableWithData]");
 
     writeHTMLTableTagOpening(output);
@@ -44,7 +46,7 @@ void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *c
     writeHTMLTableBodyTagsOpening(output);
     for (int i = 0; i < data->leaders_length; i++) {
         char line[LINE_LIMIT];
-        buildLeaderHTMLLine(data->leaders[i], line, columns, formatter);
+        buildLeaderHTMLLine(data->leaders[i], line, columns, formats, formats_length);
         fprintf(output, "%s", line);
     }
     writeHTMLTableBodyTagsClosing(output);
@@ -102,16 +104,12 @@ void buildLeaderHTMLTableHeader(char *headers, ExporterColumns *leaderColumns) {
     writeStringHTMLTableHeaderTagsClosing(headers);
 }
 
-void buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Formatter *formatter) {
+void
+buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Format **formats, int formats_length) {
     char buffer[LINE_LIMIT];
     strcpy(line, "");
 
-    if(formatter != NULL){
-        formatter->formatCondition(formatter, leader);
-        writeStringHTMLTableRowTagsOpeningAndApplyFormats(line, formatter->format_list, formatter->format_list_length);
-    }else{
-        writeStringHTMLTableRowTagsOpening(line);
-    }
+    writeStringHTMLTableRowTagsOpeningAndApplyFormats(leader, line, formats, formats_length);
 
     if (leaderColumns->specie) {
         writeStringHTMLTableColumnTagsOpening(line);
@@ -244,8 +242,15 @@ void writeStringHTMLTableBodyTagsClosing(char *output) {
     strcat(output, "</tbody>");
 }
 
-void writeStringHTMLTableRowTagsOpeningAndApplyFormats(char *output, Format **format_list, int format_list_length) {
-    foreach(format_list, format_list_length, writePropertyAndValueInTableRowTagOpening, output);
+void writeStringHTMLTableRowTagsOpeningAndApplyFormats(Leader *leader, char *output, Format **formats_conditions, int formats_conditions_length) {
+    for(int i = 0 ; i< formats_conditions_length ; i++){
+        FormatCondition format_condition = formats_conditions[i];
+        Format *format = format_condition(leader);
+
+        if(format != NULL){
+             writePropertyAndValueInTableRowTagOpening(output, format);
+        }
+    }
 }
 
 void writePropertyAndValueInTableRowTagOpening(char *output, Format *format) {

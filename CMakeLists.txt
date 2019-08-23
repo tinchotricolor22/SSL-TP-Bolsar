@@ -40,8 +40,7 @@ add_executable(SSL_TP_Bolsar
         src/libs/filter/filter.h
         src/libs/filter/filterleader.c
         src/libs/formatter/formatter.h
-        src/libs/formatter/formatterhtml.c
-        src/libs/formatter/formattertypes.h
+        src/libs/formatter/formatterleader.c
         src/libs/logging/logging.c
         src/libs/logging/logging.h
         src/libs/processor/processor.c

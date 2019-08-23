@@ -13,15 +13,17 @@ void initProcessor(Logger processorDebugLoggerArg) {
     processorDebugLogger = processorDebugLoggerArg;
 }
 
-void initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters, int filters_length,
-                  Formatter **formatter, ExporterColumns **columns) {
+void
+initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
+                  int filters_length, Format **formats, int formats_length, ExporterColumns **columns) {
     processParams = malloc(sizeof *processParams);
     processParams->dataMethod = dataMethod;
     processParams->parserMethod = parserMethod;
     processParams->exporterMethod = exporterMethod;
     processParams->filters = filters;
     processParams->filters_length = filters_length;
-    processParams->formatter = *formatter;
+    processParams->formats_conditions = formats;
+    processParams->formats_conditions_length = formats_length;
     processParams->columns = *columns;
 }
 
@@ -61,7 +63,8 @@ ProcessResult process() {
 ExporterParams *buildExporterParams() {
     ExporterParams *ep = malloc(sizeof *ep);
     ep->columns = processParams->columns;
-    ep->formatter = processParams->formatter;
+    ep->formats_conditions = processParams->formats_conditions;
+    ep->formats_conditions_length = processParams->formats_conditions_length;
 
     return ep;
 }

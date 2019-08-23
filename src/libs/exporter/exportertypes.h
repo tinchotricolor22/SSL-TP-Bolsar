@@ -2,7 +2,7 @@
 #define EXPORTER_TYPES_HEADER
 
 #include "../parser/parser.h"
-#include "../formatter/formattertypes.h"
+#include "../formatter/formatter.h"
 
 // PROCESS RESULT
 #define EXPORT_RESULT_OK 0
@@ -22,7 +22,8 @@ typedef LeaderColumns ExporterColumns;
 
 typedef struct ExporterParams {
     ExporterColumns *columns;
-    Formatter *formatter;
+    FormatCondition **formats_conditions;
+    int formats_conditions_length;
 } ExporterParams;
 
 typedef int ExportResult;

@@ -8,6 +8,6 @@
 typedef int FilterResult;
 typedef FilterResult(*Filter)(void *data);
 
-FilterResult filter_major_05_variation(Leader *leader);
+FilterResult leader_filter_major_05_variation(Leader *leader);
 
 #endif

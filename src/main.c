@@ -9,7 +9,7 @@
 #include "libs/exporter/exporter.h"
 #include "libs/preferences/preferences.h"
 
-#define DEBUG 0
+#define DEBUG 1
 
 //mainDebugLogger is logger for debug mode in main file
 static Logger mainDebugLogger;
@@ -131,7 +131,8 @@ void defaultReportsProcessorInjection(Option optionReports) {
                       processParams->exporterMethod,
                       processParams->filters,
                       processParams->filters_length,
-                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      processParams->formats_conditions,
+                      processParams->formats_conditions_length,
                       &processParams->columns);
 }
 
@@ -150,7 +151,8 @@ void customProcessorInjection(Option optionMethod, Option optionExport) {
                       processParams->exporterMethod,
                       processParams->filters,
                       processParams->filters_length,
-                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      processParams->formats_conditions,
+                      processParams->formats_conditions_length,
                       &processParams->columns);
 }
 

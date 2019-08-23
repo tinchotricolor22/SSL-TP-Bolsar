@@ -15,7 +15,9 @@ ProcessParams *defaultLeaders05VariationScreen() {
     processParams->columns = buildLeaderColumns(1, 0, 0, 0, 0, 0, 0);
     processParams->filters = malloc(sizeof processParams->filters[0] * FILTERS_MAX_LENGTH);
     processParams->filters_length = 0;
-    add(processParams->filters, filter_major_05_variation, &processParams->filters_length, FILTERS_MAX_LENGTH);
+    add(processParams->filters, leader_filter_major_05_variation, &processParams->filters_length, FILTERS_MAX_LENGTH);
+
+    processParams->formats_conditions_length = 0;
 
     return processParams;
 }
@@ -27,10 +29,14 @@ ProcessParams *defaultLeaders05VariationHTML() {
     processParams->parserMethod = parseDataFromHTML;
     processParams->exporterMethod = exportHTML;
     processParams->columns = buildLeaderColumns(1, 0, 0, 0, 0, 0, 0);
+
     processParams->filters = malloc(sizeof processParams->filters[0] * FILTERS_MAX_LENGTH);
     processParams->filters_length = 0;
-    add(processParams->filters, filter_major_05_variation, &processParams->filters_length, FILTERS_MAX_LENGTH);
-    processParams->formatter = buildLeaderFormatter(buildLeaderRedTRCondition);
+    add(processParams->filters, leader_filter_major_05_variation, &processParams->filters_length, FILTERS_MAX_LENGTH);
+
+    processParams->formats_conditions = malloc(sizeof processParams->formats_conditions[0] * MAX_FORMATS);
+    processParams->formats_conditions_length = 0;
+    add(processParams->formats_conditions, leader_purchase_sale_major_opening, &processParams->formats_conditions_length, MAX_FORMATS);
 
     return processParams;
 }
@@ -43,6 +49,7 @@ ProcessParams *defaultLeadersSalePurchaseCSV() {
     processParams->exporterMethod = exportCSV;
     processParams->columns = buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
     processParams->filters_length = 0;
+    processParams->formats_conditions_length = 0;
 
     return processParams;
 }
@@ -55,6 +62,7 @@ ProcessParams *defaultPreferences() {
     processParams->exporterMethod = exportCSV;
     processParams->columns = buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
     processParams->filters_length = 0;
+    processParams->formats_conditions_length = 0;
 
     return processParams;
 }
