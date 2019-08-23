@@ -33,8 +33,6 @@ void makeID(char *htmlID, const char *ID);
 
 void searchPropertyID(FILE *htmlFile, char *htmlLine, const char *propertyID);
 
-FILE *createAuxFileFromString(char *string, const char *auxPath);
-
 double extractDoubleValue(char* stringDouble);
 
 void trim(const char *input, char *result);

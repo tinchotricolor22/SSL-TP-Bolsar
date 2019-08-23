@@ -26,12 +26,12 @@ buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, 
 }
 
 void getOutPutPath(char *output, const char *extension) {
-    strcpy(output, getExporterOutputPath());
+    strcpy(output, g_config.exporter_output_path);
     strcat(output, extension);
 }
 
 void withDelimiter(char *str) {
-    strcat(str, getCSVDelimiter());
+    strcat(str, g_config.csv_delimiter);
 }
 
 void withBreakLine(char *str) {

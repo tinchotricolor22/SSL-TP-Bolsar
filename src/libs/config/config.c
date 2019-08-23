@@ -1,26 +1,29 @@
 #include "config.h"
-#include "../logging/logging.h"
+#include "stdio.h"
+#include "string.h"
 
-void initConfig(Logger debugLogger) {
-    configDebugLogger = debugLogger;
-}
+int initConfig() {
+    FILE *config_properties = fopen("resources/config.properties", "r");
 
-char *getParserCMD(){
-    return "";
-}
+    if (config_properties == NULL) {
+        return RESULT_CONFIG_ERROR;
+    }
 
-char *getDataFSPath() {
-    return "resources/lideres_bcba.html";
-}
-
-char *getAuxTableFileName() {
-    return "output/aux_table_file.txt";
-}
-
-char *getExporterOutputPath() {
-    return "output/lideres_bcba_result";
-}
-
-char *getCSVDelimiter() {
-    return ",";
+    char id[50], value[50];
+    while (fscanf(config_properties, "%[^=]=%s", &id, &value) != EOF) {
+        if (strstr(id, "fs_data_path")) {
+            strcpy(g_config.fs_data_path, value);
+        } else if (strstr(id, "online_data_url")) {
+            strcpy(g_config.wget_cmd, WGET_CMD);
+            strcat(g_config.wget_cmd, value);
+        } else if (strstr(id, "exporter_output_path")) {
+            strcpy(g_config.exporter_output_path, value);
+        } else if (strstr(id, "csv_delimiter")) {
+            strcpy(g_config.csv_delimiter, value);
+        } else if (strstr(id, "aux_table_file_name")) {//TODO: eliminar luego del refactor del parsers
+            strcpy(g_config.aux_table_file_name, value);
+        }
+    }
+    fclose(config_properties);
+    return RESULT_CONFIG_OK;
 }
