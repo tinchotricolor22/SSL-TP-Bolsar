@@ -13,27 +13,27 @@
 static Logger main_debug_logger;
 
 //init_main initializes global variables (like logger) to use in all the lifecycle of the program
-void init_main(Logger debug_logger);
+void init_main(const Logger debug_logger);
 
 //init initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
 void init();
 
 //custom_processor_injection initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
 //for customs reports
-void custom_processor_injection(Option option_method, Option option_export);
+void custom_processor_injection(const Option option_method, const Option option_export);
 
 //default_reports_processor_injection initializes global variables from dependencies (like logger) to use in all the lifecycle of the program
 //for default reports
-void default_reports_processor_injection(Option option_reports);
+void default_reports_processor_injection(const Option option_reports);
 
 //optionsMenus calls UI and returns result code
 int option_menus();
 
 //data_method selects data get strategy for custom reports
-DataMethod data_method(Option option_method);
+DataMethod data_method(const Option option_method);
 
 //exporter_method returns exporter strategy for custom reports
-ExporterMethod exporter_method(Option option_method);
+ExporterMethod exporter_method(const Option option_method);
 
 int main() {
     init();
@@ -50,32 +50,32 @@ int main() {
     }
 
     main_debug_logger("Processing [event:main]");
-    ProcessResult processResult = process();
+    ProcessResult process_result = process();
 
-    if (processResult != PROCESS_OK) {
-        print_final_error_message(processResult);
+    if (process_result != PROCESS_OK) {
+        print_final_error_message(process_result);
     }
 
-    main_debug_logger("Process ends with result %d [event:main]", processResult);
-    return processResult;
+    main_debug_logger("Process ends with result %d [event:main]", process_result);
+    return process_result;
 }
 
 void init() {
-    Logger stdLogger = printf;
-    Logger debugLogger;
+    Logger std_logger = printf;
+    Logger debug_logger;
     if (DEBUG) {
-        debugLogger = printf_debug;
+        debug_logger = printf_debug;
     } else {
-        debugLogger = printf_none;
+        debug_logger = printf_none;
     }
 
-    init_main(debugLogger);
-    init_config(debugLogger);
-    init_UI(stdLogger);
-    init_data(debugLogger);
-    initParser(debugLogger);
-    initExporter(debugLogger);
-    init_processor(debugLogger);
+    init_main(debug_logger);
+    init_config(debug_logger);
+    init_UI(std_logger);
+    init_data(debug_logger);
+    initParser(debug_logger);
+    initExporter(debug_logger);
+    init_processor(debug_logger);
 }
 
 void init_main(Logger debug_logger) {
@@ -101,16 +101,16 @@ int option_menus() {
             return EXIT;
         }
 
-        main_debug_logger("Preparing processor for custom preferences [event:main]");
+        main_debug_logger("Preparing processor for custom preferences [event:option_menus]");
         custom_processor_injection(option_method, option_export);
 
     } else {
-        main_debug_logger("Preparing processor for default preferences [event:main]");
+        main_debug_logger("Preparing processor for default preferences [event:option_menus]");
         default_reports_processor_injection(option_reports);
     }
 }
 
-void default_reports_processor_injection(Option option_reports) {
+void default_reports_processor_injection(const Option option_reports) {
     ProcessParams *process_params;
 
     switch (option_reports) {
@@ -136,8 +136,8 @@ void default_reports_processor_injection(Option option_reports) {
 }
 
 //custom_processor_injection creates a new processorParams depending of method and export methods selected
-void custom_processor_injection(Option option_method, Option option_export) {
-    main_debug_logger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", option_method,
+void custom_processor_injection(const Option option_method, const Option option_export) {
+    main_debug_logger("Options selected [event:custom_processor_injection] [option_method:%d] [option_export:%d]", option_method,
                       option_export);
 
     ProcessParams *processParams = default_preferences();
@@ -155,7 +155,7 @@ void custom_processor_injection(Option option_method, Option option_export) {
                         &processParams->p_columns);
 }
 
-DataMethod data_method(Option option_method) {
+DataMethod data_method(const Option option_method) {
     switch (option_method) {
         case METHOD_ONLINE:
             return _get_data_with_online_method;
@@ -164,7 +164,7 @@ DataMethod data_method(Option option_method) {
     }
 }
 
-ExporterMethod exporter_method(Option option_method) {
+ExporterMethod exporter_method(const Option option_method) {
     switch (option_method) {
         case EXPORT_CSV:
             return exportCSV;

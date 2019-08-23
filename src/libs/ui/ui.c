@@ -2,7 +2,7 @@
 #include "ui.h"
 #include "../logging/logging.h"
 
-void init_UI(Logger std_logger) {
+void init_UI(const Logger std_logger) {
     ui_logger = std_logger;
 }
 
@@ -63,6 +63,6 @@ Option reports_option_menu() {
     return report_option;
 }
 
-void print_final_error_message(int error_code) {
+void print_final_error_message(const int error_code) {
     ui_logger("The process finalize with error code: %d\n", error_code);
 }

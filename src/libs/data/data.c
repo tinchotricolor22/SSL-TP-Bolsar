@@ -2,8 +2,8 @@
 #include "config.h"
 #include "stdlib.h"
 
-void init_data(const Logger debugLogger) {
-    data_debug_logger = debugLogger;
+void init_data(const Logger debug_logger) {
+    data_debug_logger = debug_logger;
 }
 
 DataOutput *create_data_output(FILE* file) {

@@ -24,7 +24,7 @@ typedef int Option;
 Logger ui_logger;
 
 //init_UI inits ui_logger
-void init_UI(Logger);
+void init_UI(const Logger);
 
 //method_options_menu prints the menu to select an scraping method
 //returns selected option
@@ -39,5 +39,5 @@ Option export_options_menu();
 Option reports_option_menu();
 
 //print_final_error_message prints error message with error code
-void print_final_error_message(int);
+void print_final_error_message(const int);
 
