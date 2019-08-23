@@ -50,13 +50,16 @@ void buildLeaderCSVHeaders(ExporterColumns *leaderColumns, char *headers);
 void buildLeaderCSVLine(Leader *leader, ExporterColumns *columns, char *line);
 
 //LEADER HTML
-void writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter);
+void
+writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats, int formats_length);
 
-void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Formatter *formatter);
+void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats,
+                            int formats_length);
 
 void buildLeaderHTMLTableHeader(char *headers, ExporterColumns *leaderColumns);
 
-void buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Formatter *formatter);
+void
+buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Format **formats, int formats_length);
 
 void writePropertyAndValueInTableRowTagOpening(char *output, Format *format);
 
@@ -104,8 +107,7 @@ void writeStringHTMLTableBodyTagsClosing(char *output);
 
 void writeStringHTMLTableRowTagsOpening(char *output);
 
-void writeStringHTMLTableRowTagsOpeningAndApplyFormats(char *output, Format **format_list, int format_list_length);
-
+void writeStringHTMLTableRowTagsOpeningAndApplyFormats(Leader *leader, char *output, Format **formats_conditions, int formats_conditions_length);
 void writeStringHTMLTableRowTagsClosing(char *output);
 
 void writeStringHTMLTableColumnTagsOpening(char *output);

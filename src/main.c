@@ -129,8 +129,10 @@ void defaultReportsProcessorInjection(Option optionReports) {
     initProcessParams(processParams->dataMethod,
                       processParams->parserMethod,
                       processParams->exporterMethod,
-                      processParams->filters == NULL ? NULL : processParams->filters,
-                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      processParams->filters,
+                      processParams->filters_length,
+                      processParams->formats_conditions,
+                      processParams->formats_conditions_length,
                       &processParams->columns);
 }
 
@@ -147,8 +149,10 @@ void customProcessorInjection(Option optionMethod, Option optionExport) {
     initProcessParams(processParams->dataMethod,
                       processParams->parserMethod,
                       processParams->exporterMethod,
-                      processParams->filters == NULL ? NULL : processParams->filters,
-                      &processParams->formatter == NULL ? NULL : &processParams->formatter,
+                      processParams->filters,
+                      processParams->filters_length,
+                      processParams->formats_conditions,
+                      processParams->formats_conditions_length,
                       &processParams->columns);
 }
 

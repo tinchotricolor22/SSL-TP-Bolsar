@@ -6,19 +6,24 @@
 
 Logger processorDebugLogger;
 
+ParserInput *buildParserInput(DataOutput *dataOutput);
+
+
 void initProcessor(Logger processorDebugLoggerArg) {
     processorDebugLogger = processorDebugLoggerArg;
 }
 
 void
-initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filters *filters,
-                  Formatter **formatter, ExporterColumns **columns) {
+initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
+                  int filters_length, Format **formats, int formats_length, ExporterColumns **columns) {
     processParams = malloc(sizeof *processParams);
     processParams->dataMethod = dataMethod;
     processParams->parserMethod = parserMethod;
     processParams->exporterMethod = exporterMethod;
     processParams->filters = filters;
-    processParams->formatter = *formatter;
+    processParams->filters_length = filters_length;
+    processParams->formats_conditions = formats;
+    processParams->formats_conditions_length = formats_length;
     processParams->columns = *columns;
 }
 
@@ -34,7 +39,7 @@ ProcessResult process() {
 
     processorDebugLogger("Calling parserMethod [event:process]");
 
-    ParserInput *parserInput = buildParserInputFromDataOutput(dataData);
+    ParserInput *parserInput = buildParserInput(dataData);
     ParserOutput *parserData;
     ParserResult resultParser = processParams->parserMethod(&parserData, parserInput);
 
@@ -42,20 +47,9 @@ ProcessResult process() {
         return PROCESS_ERROR_PARSER;
     }
 
-    processorDebugLogger("Calling filters [event:process]");
-    FilterOutput *filteredData = buildFilterOutput();
-    FilterResult resultFilter = executeFilters(parserData, &filteredData);
-
-    FilterOutput **exporterData = &filteredData;
-    if (resultFilter == NO_FILTERS_APPLIED) {
-        exporterData = &parserData;
-    } else if (resultFilter != FILTER_RESULT_OK) {
-        return PROCESS_ERROR_FILTER;
-    }
-
     processorDebugLogger("Calling exportMethod [event:process]");
     ExporterParams *exporterParams = buildExporterParams();
-    ExportResult resultExport = processParams->exporterMethod(*exporterData, exporterParams);
+    ExportResult resultExport = processParams->exporterMethod(parserData, exporterParams);
 
     if (resultExport != EXPORT_RESULT_OK) {
         return PROCESS_ERROR_EXPORTER;
@@ -69,26 +63,20 @@ ProcessResult process() {
 ExporterParams *buildExporterParams() {
     ExporterParams *ep = malloc(sizeof *ep);
     ep->columns = processParams->columns;
-    ep->formatter = processParams->formatter;
+    ep->formats_conditions = processParams->formats_conditions;
+    ep->formats_conditions_length = processParams->formats_conditions_length;
 
     return ep;
 }
 
-FilterResult executeFilters(ParserOutput *data, FilterOutput **filteredData) {
-    if (processParams->filters != NULL) {
-        for (int i = 0; i < processParams->filters->filter_list_length; i++) {
-
-            Filter execFilter = processParams->filters->filter_list[i];
-            FilterResult result = execFilter(data, filteredData);
-            if (result != FILTER_RESULT_OK) {
-                return result;
-            }
-        }
-    } else {
-        return NO_FILTERS_APPLIED;
-    }
-    return FILTER_RESULT_OK;
+ParserInput *buildParserInput(DataOutput *dataOutput) {
+    ParserInput *newInput = malloc(sizeof *newInput);
+    newInput->file = dataOutput->file;
+    newInput->filters = processParams->filters;
+    newInput->filters_length = processParams->filters_length;
+    return newInput;
 }
+
 
 void closeResources(DataOutput *dataData) {
     fclose(dataData->file);

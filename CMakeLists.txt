@@ -34,14 +34,12 @@ add_executable(SSL_TP_Bolsar
         src/libs/parser/parser.c
         src/libs/parser/parser.h
         src/libs/parser/parserhtml.c
-        src/libs/parser/parsertypes.h
         src/libs/preferences/preferences.h
         src/libs/preferences/preferences.c
         src/libs/filter/filter.h
         src/libs/filter/filterleader.c
         src/libs/formatter/formatter.h
-        src/libs/formatter/formatterhtml.c
-        src/libs/formatter/formattertypes.h
+        src/libs/formatter/formatterleader.c
         src/libs/logging/logging.c
         src/libs/logging/logging.h
         src/libs/processor/processor.c

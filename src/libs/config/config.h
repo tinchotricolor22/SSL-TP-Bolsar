@@ -30,7 +30,6 @@ static struct Config {
     char wget_cmd[100];
     char exporter_output_path[100];
     char csv_delimiter[100];
-    char aux_table_file_name[100]; //TODO:Eliminar luego del parser
 };
 
 //g_config represents config to be used in all the lifecycle of the program

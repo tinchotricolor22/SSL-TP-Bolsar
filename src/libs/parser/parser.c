@@ -2,117 +2,74 @@
 #include "stdio.h"
 #include "string.h"
 #include "stdlib.h"
-#include "ctype.h"
 #include "../utils/commons.h"
 #include "../logging/logging.h"
-#include "../config/config.h"
 
-#define ID_SPECIE "spPopSimbolo"
-#define SUFFIX_VARIATION "3_VAR"
-#define SUFFIX_PURCHASE_PRICE "3_PC"
-#define SUFFIX_SALE_PRICE "3_PV"
-#define SUFFIX_OPENING_PRICE "3_PAPE"
-#define SUFFIX_MAX_PRICE "3_PMAX"
-#define SUFFIX_MIN_PRICE "3_PMIN"
+#define COLUMN_SPECIE 0
+#define COLUMN_VARIATION 7
+#define COLUMN_PURCHASE_PRICE 3
+#define COLUMN_SALE_PRICE 4
+#define COLUMN_OPENING_PRICE 8
+#define COLUMN_MAX_PRICE 9
+#define COLUMN_MIN_PRICE 10
 
+/************** PRIVATE **************/
+static ParserOutput *createParserOutput(Leader **leaders, const int length);
+static void fillLeadersFromTagsStr(char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], const int tags_length, Leader **leaders, int *leaders_length, Filter** filters, const int filters_length);
+static FilterResult apply_conditions(Filter** filters, const int filters_length,Leader *leader);
+
+/************************************/
 void initParser(Logger debugLogger) {
     parserDebugLogger = debugLogger;
 }
 
 ParserResult parseDataFromHTML(ParserOutput **data, ParserInput *parserInput) {
-    Tag **tags = malloc(TAGS_MAX_LENGTH * sizeof tags[0]);
+    char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH];
     int tags_length = 0;
 
-    parseTagsFromHTML(parserInput->file, tags, &tags_length, TAGS_MAX_LENGTH, TABLE_ACTIONS_ID);
-    fclose(parserInput->file);
+    parseTagsFromHTML(parserInput->file, tags,&tags_length, TAGS_MAX_LENGTH);
 
     Leader **leaders = malloc(LEADERS_MAX_LENGTH * sizeof leaders[0]);
     int leaders_length = 0;
-    fillLeadersFromTags(tags, tags_length, leaders, &leaders_length);
+    fillLeadersFromTagsStr(tags, tags_length, leaders, &leaders_length, parserInput->filters, parserInput->filters_length);
 
     *data = createParserOutput(leaders, leaders_length);
     return PARSER_RESULT_OK;
 }
 
-void fillLeadersFromTags(Tag **tags, const int tags_length, Leader **leaders, int *leaders_length) {
-    parserDebugLogger("Starting to fill %d leaders [event:fillLeadersFromRows]",tags_length);
-    Leader *actualProcessingLeader;
+static void fillLeadersFromTagsStr(char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], const int tags_length, Leader **leaders, int *leaders_length, Filter** filters, const int filters_length) {
+    char column[16][50];
+    for (int countTags = 1; countTags < tags_length; countTags++) {
+        Leader *newLeader = malloc(sizeof *newLeader);
+        trim(tags[countTags],tags[countTags]);
+        sscanf(tags[countTags], "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;]", column[0],column[1],column[2],column[3], column[4],column[5],column[6],column[7], column[8],column[9],column[10],column[11], column[12],column[13],column[14],column[15]);
+        strcpy(newLeader->specie, column[COLUMN_SPECIE]);
+        newLeader->variation = extractDoubleValue(column[COLUMN_VARIATION]);
+        newLeader->purchasePrice= extractDoubleValue(column[COLUMN_PURCHASE_PRICE]);
+        newLeader->salePrice=extractDoubleValue(column[COLUMN_SALE_PRICE]);
+        newLeader->openingPrice= extractDoubleValue(column[COLUMN_OPENING_PRICE]);
+        newLeader->maxPrice= extractDoubleValue(column[COLUMN_MAX_PRICE]);
+        newLeader->minPrice = extractDoubleValue(column[COLUMN_MIN_PRICE]);
 
-    for (int countTags = 0; countTags < tags_length; countTags++) {
-        if (!strcmp(tags[countTags]->id, ID_SPECIE)) {
-            Leader *newLeader = malloc(sizeof *newLeader);
-            char* specie = tags[countTags]->value;
-            strcpy(newLeader->specie, specie);
-
+        if (apply_conditions(filters,filters_length,newLeader)) {
             add(leaders, newLeader, leaders_length, LEADERS_MAX_LENGTH);
-            actualProcessingLeader = newLeader;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_VARIATION)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->variation = value;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_PURCHASE_PRICE)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->purchasePrice = value;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_SALE_PRICE)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->salePrice = value;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_OPENING_PRICE)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->openingPrice = value;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_MAX_PRICE)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->maxPrice = value;
-        } else if (ends_with(tags[countTags]->id, SUFFIX_MIN_PRICE)) {
-            double value = extractDoubleValue(tags[countTags]->value);
-            actualProcessingLeader->minPrice = value;
         }
     }
 }
 
-ParserOutput *createParserOutput(Leader **leaders, const int length) {
+static ParserOutput *createParserOutput(Leader **leaders, const int length) {
     ParserOutput *newData = malloc(sizeof *newData);
     newData->leaders = leaders;
     newData->leaders_length = length;
     return newData;
 }
 
-ParserInput *buildParserInputFromDataOutput(DataOutput *dataOutput) {
-    ParserInput *newInput = malloc(sizeof *newInput);
-    newInput->file = dataOutput->file;
-    return newInput;
-}
-
-double extractDoubleValue(char *stringDouble) {
-    trim(stringDouble, stringDouble);
-    replace(stringDouble, ',', '.');
-
-    return atof(stringDouble);
-}
-
-void trim(const char *input, char *result) {
-    int i, j = 0;
-    for (i = 0; input[i] != '\0'; i++) {
-        if (!isspace((unsigned char) input[i])) {
-            result[j++] = input[i];
+static int apply_conditions(Filter** filters, const int filters_length,Leader *leader){
+    for(int i = 0; i< filters_length ; i ++){
+        Filter filter = filters[i];
+        if(!filter(leader)){
+            return 0;
         }
     }
-    result[j] = '\0';
-}
-
-void replace(char *input, const char character, const char replace) {
-    for (int i = 0; input[i] != '\0'; i++) {
-        if (input[i] == character) {
-            input[i] = replace;
-        }
-    }
-}
-
-int ends_with(const char *str, const char *suffix)
-{
-    if (!str || !suffix)
-        return 0;
-    size_t lenstr = strlen(str);
-    size_t lensuffix = strlen(suffix);
-    if (lensuffix >  lenstr)
-        return 0;
-    return strncmp(str + lenstr - lensuffix, suffix, lensuffix) == 0;
+    return 1;
 }
