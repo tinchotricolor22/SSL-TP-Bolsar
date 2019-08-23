@@ -33,7 +33,7 @@ init_process_params(const DataMethod data_method, const ParserMethod parserMetho
 }
 
 ProcessResult process() {
-    processor_debug_logger("Calling data_method [event:process]");
+    processor_debug_logger("Calling data method [event:process]");
 
     DataOutput *p_data_data;
     DataResult result_data = g_p_process_params->data_method(&p_data_data);
@@ -42,7 +42,7 @@ ProcessResult process() {
         return PROCESS_ERROR_DATA;
     }
 
-    processor_debug_logger("Calling parser_method [event:process]");
+    processor_debug_logger("Calling parser method [event:process]");
 
     ParserInput *p_parser_input = build_parser_input(p_data_data);
     ParserOutput *p_parser_data;
@@ -52,7 +52,7 @@ ProcessResult process() {
         return PROCESS_ERROR_PARSER;
     }
 
-    processor_debug_logger("Calling exportMethod [event:process]");
+    processor_debug_logger("Calling exporter method [event:process]");
     ExporterParams *p_exporter_params = build_exporter_params();
     ExportResult result_export = g_p_process_params->exporter_method(p_parser_data, p_exporter_params);
 
