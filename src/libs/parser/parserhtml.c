@@ -5,10 +5,23 @@
 #include "string.h"
 #include "../utils/commons.h"
 
+static FILE* createAuxFileFromString(char *string, const char *auxPath) {
+    parserDebugLogger("Creating aux file to iterate table in path %s [event:createAuxFileFromString]", auxPath);
+    FILE *file = fopen(auxPath, "w+");
+
+    if (file == NULL) {
+        parserDebugLogger("ERROR: Cannot open file in path: %s [event:createAuxFileFromString]", auxPath);
+        return file;
+    }
+
+    fprintf(file, "%s", string);
+    return file;
+}
+
 void parseTagsFromHTML(FILE *file, Tag **tags, int *tags_length, const int tags_max_length, char *init_id) {
     parserDebugLogger("Starting to process htmlFile [event:parseTagsFromHTML]");
     char *table = parseHTMLFromTableID(init_id, file);
-    FILE *tableFile = createAuxFileFromString(table, getAuxTableFileName());
+    FILE *tableFile = createAuxFileFromString(table, g_config.aux_table_file_name);
 
     parseTagsFromTable(tableFile, tags, tags_length, tags_max_length);
     fclose(tableFile);
@@ -43,19 +56,6 @@ void parseTagsFromTable(FILE *tableFile, Tag **tags, int *tags_length, const int
 
         add(tags, newTag, tags_length, tags_max_length);
     }
-}
-
-FILE *createAuxFileFromString(char *string, const char *auxPath) {
-    parserDebugLogger("Creating aux file to iterate table in path %s [event:createAuxFileFromString]", auxPath);
-    FILE *file = fopen(auxPath, "w+");
-
-    if (file == NULL) {
-        parserDebugLogger("ERROR: Cannot open file in path: %s [event:createAuxFileFromString]", auxPath);
-        return file;
-    }
-
-    fprintf(file, "%s", string);
-    return file;
 }
 
 void makeID(char *htmlID, const char *ID) {

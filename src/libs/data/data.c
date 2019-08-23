@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 void initData(Logger debugLogger) {
-    FSPath = getDataFSPath();
+    FSPath = g_config.fs_data_path;
     dataDebugLogger = debugLogger;
 }
 

@@ -2,10 +2,11 @@
 #include "config.h"
 
 DataResult getDataWithOnlineMethod(DataOutput **dataOutput) {
-    FILE *file = popen(ONLINE_CMD, "r");
+    dataDebugLogger("Executing command %s [event:getDataWithOnlineMethod]", g_config.wget_cmd);
+    FILE *file = popen(g_config.wget_cmd, "r");
 
     if (file == NULL) {
-        dataDebugLogger("ERROR: Cannot open file in path: %s [event:getDataWithOnlineMethod]", FSPath);
+        dataDebugLogger("ERROR: Command error [event:getDataWithOnlineMethod]", FSPath);
         return DATA_RESULT_ERROR;
     }
 
