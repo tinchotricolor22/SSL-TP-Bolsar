@@ -21,7 +21,7 @@
 #define RESULT_CONFIG_OK 0
 #define RESULT_CONFIG_ERROR 1
 
-//ResultConfig represents the result of initConfig
+//ResultConfig represents the result of init_config
 typedef int ResultConfig;
 
 //Config contains all config parameters
@@ -36,7 +36,7 @@ static struct Config {
 //g_config represents config to be used in all the lifecycle of the program
 struct Config g_config;
 
-//initConfig inits g_config variable extracting data from config.properties file
-ResultConfig initConfig();
+//init_config inits g_config variable extracting data from config.properties file
+ResultConfig init_config();
 
 #endif

@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "string.h"
 
-int initConfig() {
+int init_config() {
     FILE *config_properties = fopen("resources/config.properties", "r");
 
     if (config_properties == NULL) {
@@ -20,8 +20,6 @@ int initConfig() {
             strcpy(g_config.exporter_output_path, value);
         } else if (strstr(id, "csv_delimiter")) {
             strcpy(g_config.csv_delimiter, value);
-        } else if (strstr(id, "aux_table_file_name")) {//TODO: eliminar luego del refactor del parsers
-            strcpy(g_config.aux_table_file_name, value);
         }
     }
     fclose(config_properties);

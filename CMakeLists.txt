@@ -29,7 +29,6 @@ add_executable(SSL_TP_Bolsar
         src/libs/exporter/exportertypes.h
         src/libs/data/data.c
         src/libs/data/data.h
-        src/libs/data/datatypes.h
         src/libs/data/dataonline.c
         src/libs/data/datafile.c
         src/libs/parser/parser.c

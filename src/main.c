@@ -40,7 +40,7 @@ ExporterMethod exporterMethod(Option optionMethod);
 int main() {
     init();
     mainDebugLogger("Starting config [event:main]");
-    ResultConfig result_config = initConfig();
+    ResultConfig result_config = init_config();
     if (result_config == RESULT_CONFIG_ERROR){
         return result_config;
     }
@@ -73,7 +73,7 @@ void init() {
 
     initMain(debugLogger);
     initUI(stdLogger);
-    initData(debugLogger);
+    init_data(debugLogger);
     initParser(debugLogger);
     initExporter(debugLogger);
     initProcessor(debugLogger);
@@ -155,9 +155,9 @@ void customProcessorInjection(Option optionMethod, Option optionExport) {
 DataMethod dataMethod(Option optionMethod) {
     switch (optionMethod) {
         case METHOD_ONLINE:
-            return getDataWithOnlineMethod;
+            return _get_data_with_online_method;
         default:
-            return getDataWithFSMethod;
+            return _get_data_with_fs_method;
     }
 }
 
