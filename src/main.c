@@ -74,7 +74,7 @@ void init() {
     init_UI(std_logger);
     init_data(debug_logger);
     initParser(debug_logger);
-    initExporter(debug_logger);
+    init_exporter(debug_logger);
     init_processor(debug_logger);
 }
 
@@ -167,10 +167,10 @@ DataMethod data_method(const Option option_method) {
 ExporterMethod exporter_method(const Option option_method) {
     switch (option_method) {
         case EXPORT_CSV:
-            return exportCSV;
+            return export_csv;
         case EXPORT_HTML:
-            return exportHTML;
+            return export_html;
         default:
-            return exportStdout;
+            return export_stdout;
     }
 }

@@ -2,7 +2,7 @@
 #define PROCESSOR_HEADER
 
 #include "../logging/logging.h"
-#include "../exporter/exportertypes.h"
+#include "../exporter/exporter.h"
 #include "../parser/parser.h"
 #include "../formatter/formatter.h"
 #include "../data/data.h"

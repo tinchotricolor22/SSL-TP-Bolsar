@@ -1,15 +1,24 @@
-#include "exportertypes.h"
+#ifndef EXPORTER_HEADER
+#define EXPORTER_HEADER
+
 #include "../domain/leader.h"
 #include "../logging/logging.h"
 #include "stdio.h"
+#include "../parser/parser.h"
+#include "../formatter/formatter.h"
 
-#define LINE_LIMIT 1000
-#define PATH_LIMIT 100
+// PROCESS RESULT
+#define EXPORT_RESULT_OK 0
+#define EXPORT_RESULT_ERROR 1
 
 #define HTML_EXTENSION ".html"
 #define CSV_EXTENSION ".csv"
 
-//LEADER
+#define LINE_LIMIT 1000
+#define PATH_LIMIT 100
+
+/**********LEADER**********/
+
 #define LEADER_SPECIE_HEADER "Especie"
 #define LEADER_VARIATION_HEADER "Variación %"
 #define LEADER_PURCHASE_PRICE_HEADER "Precio de compra"
@@ -18,98 +27,57 @@
 #define LEADER_MAX_PRICE_HEADER "Precio Máximo"
 #define LEADER_MIN_PRICE_HEADER "Precio Mínimo"
 
-ExporterColumns *
-buildLeaderColumns(int specie, int variation, int purchasePrice, int salePrice, int openingPrice, int maxPrice,
-                   int minPrice);
+//LeaderColumns represents structs with leaders p_columns
+typedef struct LeaderColumns {
+    int specie;
+    int variation;
+    int purchase_price;
+    int sale_price;
+    int opening_price;
+    int max_price;
+    int min_price;
+} LeaderColumns;
 
-Logger exporterDebugLogger;
+//build_leader_columns instanciate ExportColumns struct with leaders columns args
+LeaderColumns *build_leader_columns(const int, const int, const int, const int, const int, const int, const int);
 
-//initExporter injects dependency variables for exporter that includes logger functions
-void initExporter(Logger debugLogger);
+/**************************/
 
-ExportResult exportCSV(ParserOutput *, ExporterParams *params);
+//data_debug_logger is logger for exporter
+Logger exporter_debug_logger;
 
-ExportResult exportHTML(ParserOutput *, ExporterParams *params);
+//init_exporter injects dependency variables for exporter that includes logger functions
+void init_exporter(const Logger);
 
-ExportResult exportStdout(ParserOutput *, ExporterParams *params);
+//output_path_with_extension appends extension to output_path from config
+void output_path_with_extension(char *output, const char *extension);
 
-//Common
-void getOutPutPath(char *output, const char *extension);
+//ExporterColumns represents structs columns
+typedef LeaderColumns ExporterColumns;
 
-void withDelimiter(char *str);
+//ExporterParams represents structs with columns and formatter config
+typedef struct ExporterParams {
+    ExporterColumns *p_columns;
+    FormatCondition **formats_conditions_list;
+    int formats_conditions_list_length;
+} ExporterParams;
 
-void withBreakLine(char *str);
+//ExportResult represents the result of export methods
+typedef int ExportResult;
 
-void removeLastCharacter(char *str);
+//ExporterMethod represents the export methods
+typedef ExportResult(*ExporterMethod)(const ParserOutput *, const ExporterParams *);
 
-//LEADER CSV
-void writeCSVFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns);
+//write_csv_file_with_data calls write headers and lines from leaders list
+void write_csv_file_with_data(FILE *, ParserOutput *, ExporterColumns *);
 
-void buildLeaderCSVHeaders(ExporterColumns *leaderColumns, char *headers);
+//export_csv exports  CSV file from input on output_path_config
+ExportResult export_csv(const ParserOutput *p_data, const ExporterParams *p_params);
 
-void buildLeaderCSVLine(Leader *leader, ExporterColumns *columns, char *line);
+//export_html exports HTML file from input on output_path_config
+ExportResult export_html(const ParserOutput *, const ExporterParams *);
 
-//LEADER HTML
-void
-writeHTMLFileWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats, int formats_length);
+//export_stdout prints in screen (stdout)
+ExportResult export_stdout(const ParserOutput *, const ExporterParams *);
 
-void writeHTMLTableWithData(FILE *output, ParserOutput *data, ExporterColumns *columns, Format **formats,
-                            int formats_length);
-
-void buildLeaderHTMLTableHeader(char *headers, ExporterColumns *leaderColumns);
-
-void
-buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, Format **formats, int formats_length);
-
-void writePropertyAndValueInTableRowTagOpening(char *output, Format *format);
-
-//HTML Tags File
-void writeHTMLMainTagsOpening(FILE *output);
-
-void writeHTMLMainTagsClosing(FILE *output);
-
-void writeHTMLTableTagOpening(FILE *output);
-
-void writeHTMLTableTagClosing(FILE *output);
-
-void writeHTMLTableHeaderTagsOpening(FILE *output);
-
-void writeHTMLTableHeaderTagsClosing(FILE *output);
-
-void writeHTMLTableBodyTagsOpening(FILE *output);
-
-void writeHTMLTableBodyTagsClosing(FILE *output);
-
-void writeHTMLTableRowTagsOpening(FILE *output);
-
-void writeHTMLTableRowTagsClosing(FILE *output);
-
-void writeHTMLTableColumnTagsOpening(FILE *output);
-
-void writeHTMLTableColumnTagsClosing(FILE *output);
-
-//HTML Tags String
-void writeStringHTMLMainTagsOpening(char *output);
-
-void writeStringHTMLMainTagsClosing(char *output);
-
-void writeStringHTMLTableTagOpening(char *output);
-
-void writeStringHTMLTableTagClosing(char *output);
-
-void writeStringHTMLTableHeaderTagsOpening(char *output);
-
-void writeStringHTMLTableHeaderTagsClosing(char *output);
-
-void writeStringHTMLTableBodyTagsOpening(char *output);
-
-void writeStringHTMLTableBodyTagsClosing(char *output);
-
-void writeStringHTMLTableRowTagsOpening(char *output);
-
-void writeStringHTMLTableRowTagsOpeningAndApplyFormats(Leader *leader, char *output, Format **formats_conditions, int formats_conditions_length);
-void writeStringHTMLTableRowTagsClosing(char *output);
-
-void writeStringHTMLTableColumnTagsOpening(char *output);
-
-void writeStringHTMLTableColumnTagsClosing(char *output);
+#endif

@@ -8,8 +8,8 @@ ProcessParams *default_leaders_05_variation_screen() {
 
     process_params->data_method = _get_data_with_online_method;
     process_params->parser_method = parseDataFromHTML;
-    process_params->exporter_method = exportStdout;
-    process_params->p_columns = buildLeaderColumns(1, 0, 0, 0, 0, 0, 0);
+    process_params->exporter_method = export_stdout;
+    process_params->p_columns = build_leader_columns(1, 0, 0, 0, 0, 0, 0);
     process_params->filters_list = malloc(sizeof process_params->filters_list[0] * FILTERS_MAX_LENGTH);
     process_params->filters_list_length = 0;
     add(process_params->filters_list, _leader_filter_major_05_variation, &process_params->filters_list_length,
@@ -25,8 +25,8 @@ ProcessParams *default_leaders_05_variation_HTML() {
 
     process_params->data_method = _get_data_with_online_method;
     process_params->parser_method = parseDataFromHTML;
-    process_params->exporter_method = exportHTML;
-    process_params->p_columns = buildLeaderColumns(1, 0, 0, 0, 0, 0, 0);
+    process_params->exporter_method = export_html;
+    process_params->p_columns = build_leader_columns(1, 0, 0, 0, 0, 0, 0);
 
     process_params->filters_list = malloc(sizeof process_params->filters_list[0] * FILTERS_MAX_LENGTH);
     process_params->filters_list_length = 0;
@@ -46,8 +46,8 @@ ProcessParams *default_leaders_sale_purchase_CSV() {
 
     process_params->data_method = _get_data_with_online_method;
     process_params->parser_method = parseDataFromHTML;
-    process_params->exporter_method = exportCSV;
-    process_params->p_columns = buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
+    process_params->exporter_method = export_csv;
+    process_params->p_columns = build_leader_columns(1, 1, 1, 1, 1, 1, 1);
     process_params->filters_list_length = 0;
     process_params->formats_conditions_list_length = 0;
 
@@ -59,8 +59,8 @@ ProcessParams *default_preferences() {
 
     process_params->data_method = _get_data_with_fs_method;
     process_params->parser_method = parseDataFromHTML;
-    process_params->exporter_method = exportCSV;
-    process_params->p_columns = buildLeaderColumns(1, 1, 1, 1, 1, 1, 1);
+    process_params->exporter_method = export_csv;
+    process_params->p_columns = build_leader_columns(1, 1, 1, 1, 1, 1, 1);
     process_params->filters_list_length = 0;
     process_params->formats_conditions_list_length = 0;
 

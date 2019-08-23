@@ -1,5 +1,5 @@
 #include "processor.h"
-#include "../exporter/exportertypes.h"
+#include "../exporter/exporter.h"
 #include "stdio.h"
 #include "stdlib.h"
 
@@ -67,9 +67,9 @@ ProcessResult process() {
 
 static ExporterParams *build_exporter_params() {
     ExporterParams *p_ep = malloc(sizeof *p_ep);
-    p_ep->columns = g_p_process_params->p_columns;
-    p_ep->formats_conditions = g_p_process_params->formats_conditions_list;
-    p_ep->formats_conditions_length = g_p_process_params->formats_conditions_list_length;
+    p_ep->p_columns = g_p_process_params->p_columns;
+    p_ep->formats_conditions_list = g_p_process_params->formats_conditions_list;
+    p_ep->formats_conditions_list_length = g_p_process_params->formats_conditions_list_length;
 
     return p_ep;
 }
