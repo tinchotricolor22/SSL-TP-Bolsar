@@ -45,11 +45,11 @@ static void fillLeadersFromTagsStr(char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGT
         sscanf(tags[countTags], "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;]", column[0],column[1],column[2],column[3], column[4],column[5],column[6],column[7], column[8],column[9],column[10],column[11], column[12],column[13],column[14],column[15]);
         strcpy(newLeader->specie, column[COLUMN_SPECIE]);
         newLeader->variation = extractDoubleValue(column[COLUMN_VARIATION]);
-        newLeader->purchasePrice= extractDoubleValue(column[COLUMN_PURCHASE_PRICE]);
-        newLeader->salePrice=extractDoubleValue(column[COLUMN_SALE_PRICE]);
-        newLeader->openingPrice= extractDoubleValue(column[COLUMN_OPENING_PRICE]);
-        newLeader->maxPrice= extractDoubleValue(column[COLUMN_MAX_PRICE]);
-        newLeader->minPrice = extractDoubleValue(column[COLUMN_MIN_PRICE]);
+        newLeader->purchase_price= extractDoubleValue(column[COLUMN_PURCHASE_PRICE]);
+        newLeader->sale_price=extractDoubleValue(column[COLUMN_SALE_PRICE]);
+        newLeader->opening_price= extractDoubleValue(column[COLUMN_OPENING_PRICE]);
+        newLeader->max_price= extractDoubleValue(column[COLUMN_MAX_PRICE]);
+        newLeader->min_price = extractDoubleValue(column[COLUMN_MIN_PRICE]);
 
         if (apply_conditions(filters,filters_length,newLeader)) {
             add(leaders, newLeader, leaders_length, LEADERS_MAX_LENGTH);

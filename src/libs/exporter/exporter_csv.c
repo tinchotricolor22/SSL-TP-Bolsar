@@ -91,27 +91,27 @@ void buildLeaderCSVLine(Leader *leader, ExporterColumns *leaderColumns, char *li
     }
 
     if (leaderColumns->purchasePrice) {
-        sprintf(buffer, "%f,", leader->purchasePrice);
+        sprintf(buffer, "%f,", leader->purchase_price);
         strcat(line, buffer);
     }
 
     if (leaderColumns->salePrice) {
-        sprintf(buffer, "%f,", leader->salePrice);
+        sprintf(buffer, "%f,", leader->sale_price);
         strcat(line, buffer);
     }
 
     if (leaderColumns->openingPrice) {
-        sprintf(buffer, "%f,", leader->openingPrice);
+        sprintf(buffer, "%f,", leader->opening_price);
         strcat(line, buffer);
     }
 
     if (leaderColumns->maxPrice) {
-        sprintf(buffer, "%f,", leader->maxPrice);
+        sprintf(buffer, "%f,", leader->max_price);
         strcat(line, buffer);
     }
 
     if (leaderColumns->minPrice) {
-        sprintf(buffer, "%f,", leader->minPrice);
+        sprintf(buffer, "%f,", leader->min_price);
         strcat(line, buffer);
     }
     removeLastCharacter(line);

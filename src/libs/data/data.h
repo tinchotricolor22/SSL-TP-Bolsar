@@ -12,16 +12,16 @@ typedef struct DataOutput{
     FILE* file;
 } DataOutput;
 
-//DataResult represents the result of data data methods
+//DataResult represents the result of data methods
 typedef int DataResult;
 
 //DataMethod represents the data methods
 typedef DataResult (*DataMethod)(DataOutput**);
 
-//dataDebugLogger is logger for data
-Logger dataDebugLogger;
+//data_debug_logger is logger for data
+Logger data_debug_logger;
 
-//init_data inits dataDebugLogger
+//init_data inits data_debug_logger
 void init_data(Logger);
 
 //_get_data_with_online_method uses online method with WGET

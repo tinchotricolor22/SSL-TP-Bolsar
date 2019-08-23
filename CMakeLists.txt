@@ -44,7 +44,6 @@ add_executable(SSL_TP_Bolsar
         src/libs/logging/logging.h
         src/libs/processor/processor.c
         src/libs/processor/processor.h
-        src/libs/processor/processortypes.h
         src/libs/ui/ui.c
         src/libs/ui/ui.h
         src/libs/utils/commons.c

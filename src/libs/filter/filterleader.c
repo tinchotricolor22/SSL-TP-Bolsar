@@ -3,6 +3,6 @@
 #include "../utils/commons.h"
 #include "../domain/leader.h"
 
-FilterResult leader_filter_major_05_variation(Leader *leader) {
+FilterResult _leader_filter_major_05_variation(Leader *leader) {
     return leader->variation > 0.5;
 }

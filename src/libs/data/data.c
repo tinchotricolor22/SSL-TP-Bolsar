@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 void init_data(Logger debugLogger) {
-    dataDebugLogger = debugLogger;
+    data_debug_logger = debugLogger;
 }
 
 DataOutput *create_data_output(FILE* file) {

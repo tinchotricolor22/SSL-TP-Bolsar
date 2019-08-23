@@ -31,10 +31,10 @@ void defaultReportsProcessorInjection(Option optionReport);
 //optionsMenus calls UI and returns result code
 int optionMenus();
 
-//dataMethod selects data get strategy for custom reports
+//data_method selects data get strategy for custom reports
 DataMethod dataMethod(Option optionMethod);
 
-//exporterMethod returns exporter strategy for custom reports
+//exporter_method returns exporter strategy for custom reports
 ExporterMethod exporterMethod(Option optionMethod);
 
 int main() {
@@ -66,9 +66,9 @@ void init() {
     Logger stdLogger = printf;
     Logger debugLogger;
     if (DEBUG) {
-        debugLogger = printfDebug;
+        debugLogger = printf_debug;
     } else {
-        debugLogger = printfNone;
+        debugLogger = printf_none;
     }
 
     initMain(debugLogger);
@@ -76,7 +76,7 @@ void init() {
     init_data(debugLogger);
     initParser(debugLogger);
     initExporter(debugLogger);
-    initProcessor(debugLogger);
+    init_processor(debugLogger);
 }
 
 void initMain(Logger debugLogger) {
@@ -116,24 +116,24 @@ void defaultReportsProcessorInjection(Option optionReports) {
 
     switch (optionReports) {
         case REPORT_LEADERS_05_VARIATION_SCREEN:
-            processParams = defaultLeaders05VariationScreen();
+            processParams = default_leaders_05_variation_screen();
             break;
         case REPORT_LEADERS_05_VARIATION_HTML:
-            processParams = defaultLeaders05VariationHTML();
+            processParams = default_leaders_05_variation_HTML();
             break;
         case REPORT_LEADERS_SALE_PURCHASE_CSV:
-            processParams = defaultLeadersSalePurchaseCSV();
+            processParams = default_leaders_sale_purchase_CSV();
             break;
     }
 
-    initProcessParams(processParams->dataMethod,
-                      processParams->parserMethod,
-                      processParams->exporterMethod,
-                      processParams->filters,
-                      processParams->filters_length,
-                      processParams->formats_conditions,
-                      processParams->formats_conditions_length,
-                      &processParams->columns);
+    init_process_params(processParams->data_method,
+                        processParams->parser_method,
+                        processParams->exporter_method,
+                        processParams->filters_list,
+                        processParams->filters_list_length,
+                        processParams->formats_conditions_list,
+                        processParams->formats_conditions_list_length,
+                        &processParams->p_columns);
 }
 
 //customProcessorInjection creates a new processorParams depending of method and export methods selected
@@ -141,19 +141,19 @@ void customProcessorInjection(Option optionMethod, Option optionExport) {
     mainDebugLogger("Options selected [event:processOptions] [option_method:%d] [option_export:%d]", optionMethod,
                     optionExport);
 
-    ProcessParams *processParams = defaultPreferences();
+    ProcessParams *processParams = default_preferences();
 
-    processParams->dataMethod = dataMethod(optionMethod);
-    processParams->exporterMethod = exporterMethod(optionExport);
+    processParams->data_method = dataMethod(optionMethod);
+    processParams->exporter_method = exporterMethod(optionExport);
 
-    initProcessParams(processParams->dataMethod,
-                      processParams->parserMethod,
-                      processParams->exporterMethod,
-                      processParams->filters,
-                      processParams->filters_length,
-                      processParams->formats_conditions,
-                      processParams->formats_conditions_length,
-                      &processParams->columns);
+    init_process_params(processParams->data_method,
+                        processParams->parser_method,
+                        processParams->exporter_method,
+                        processParams->filters_list,
+                        processParams->filters_list_length,
+                        processParams->formats_conditions_list,
+                        processParams->formats_conditions_list_length,
+                        &processParams->p_columns);
 }
 
 DataMethod dataMethod(Option optionMethod) {

@@ -1,84 +1,87 @@
 #include "processor.h"
 #include "../exporter/exportertypes.h"
-#include "../filter/filter.h"
 #include "stdio.h"
 #include "stdlib.h"
 
-Logger processorDebugLogger;
+//build_exporter_params returns exporter params from process params
+static ExporterParams *build_exporter_params();
 
-ParserInput *buildParserInput(DataOutput *dataOutput);
+//build_parser_input returns parser input from process params and data output
+static ParserInput *build_parser_input(DataOutput *);
 
+//close_resources free pointers
+static void close_resources(DataOutput *p_data_data);
 
-void initProcessor(Logger processorDebugLoggerArg) {
-    processorDebugLogger = processorDebugLoggerArg;
+void init_processor(Logger processor_debug_logger_arg) {
+    processor_debug_logger = processor_debug_logger_arg;
 }
 
 void
-initProcessParams(DataMethod dataMethod, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
-                  int filters_length, Format **formats, int formats_length, ExporterColumns **columns) {
-    processParams = malloc(sizeof *processParams);
-    processParams->dataMethod = dataMethod;
-    processParams->parserMethod = parserMethod;
-    processParams->exporterMethod = exporterMethod;
-    processParams->filters = filters;
-    processParams->filters_length = filters_length;
-    processParams->formats_conditions = formats;
-    processParams->formats_conditions_length = formats_length;
-    processParams->columns = *columns;
+init_process_params(DataMethod data_method, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
+                    int filters_length, Format **formats, int formats_length, ExporterColumns **columns) {
+    g_p_process_params = malloc(sizeof *g_p_process_params);
+    g_p_process_params->data_method = data_method;
+    g_p_process_params->parser_method = parserMethod;
+    g_p_process_params->exporter_method = exporterMethod;
+    g_p_process_params->filters_list = filters;
+    g_p_process_params->filters_list_length = filters_length;
+    g_p_process_params->formats_conditions_list = formats;
+    g_p_process_params->formats_conditions_list_length = formats_length;
+    g_p_process_params->p_columns = *columns;
 }
 
 ProcessResult process() {
-    processorDebugLogger("Calling dataMethod [event:process]");
+    processor_debug_logger("Calling data_method [event:process]");
 
-    DataOutput *dataData;
-    DataResult resultData = processParams->dataMethod(&dataData);
+    DataOutput *p_data_data;
+    DataResult result_data = g_p_process_params->data_method(&p_data_data);
 
-    if (resultData != DATA_RESULT_OK) {
+    if (result_data != DATA_RESULT_OK) {
         return PROCESS_ERROR_DATA;
     }
 
-    processorDebugLogger("Calling parserMethod [event:process]");
+    processor_debug_logger("Calling parser_method [event:process]");
 
-    ParserInput *parserInput = buildParserInput(dataData);
-    ParserOutput *parserData;
-    ParserResult resultParser = processParams->parserMethod(&parserData, parserInput);
+    ParserInput *p_parser_input = build_parser_input(p_data_data);
+    ParserOutput *p_parser_data;
+    ParserResult result_parser = g_p_process_params->parser_method(&p_parser_data, p_parser_input);
 
-    if (resultParser != PARSER_RESULT_OK) {
+    if (result_parser != PARSER_RESULT_OK) {
         return PROCESS_ERROR_PARSER;
     }
 
-    processorDebugLogger("Calling exportMethod [event:process]");
-    ExporterParams *exporterParams = buildExporterParams();
-    ExportResult resultExport = processParams->exporterMethod(parserData, exporterParams);
+    processor_debug_logger("Calling exportMethod [event:process]");
+    ExporterParams *p_exporter_params = build_exporter_params();
+    ExportResult result_export = g_p_process_params->exporter_method(p_parser_data, p_exporter_params);
 
-    if (resultExport != EXPORT_RESULT_OK) {
+    if (result_export != EXPORT_RESULT_OK) {
         return PROCESS_ERROR_EXPORTER;
     }
 
-    closeResources(dataData);
+    close_resources(p_data_data);
 
     return PROCESS_OK;
 }
 
-ExporterParams *buildExporterParams() {
-    ExporterParams *ep = malloc(sizeof *ep);
-    ep->columns = processParams->columns;
-    ep->formats_conditions = processParams->formats_conditions;
-    ep->formats_conditions_length = processParams->formats_conditions_length;
+static ExporterParams *build_exporter_params() {
+    ExporterParams *p_ep = malloc(sizeof *p_ep);
+    p_ep->columns = g_p_process_params->p_columns;
+    p_ep->formats_conditions = g_p_process_params->formats_conditions_list;
+    p_ep->formats_conditions_length = g_p_process_params->formats_conditions_list_length;
 
-    return ep;
+    return p_ep;
 }
 
-ParserInput *buildParserInput(DataOutput *dataOutput) {
-    ParserInput *newInput = malloc(sizeof *newInput);
-    newInput->file = dataOutput->file;
-    newInput->filters = processParams->filters;
-    newInput->filters_length = processParams->filters_length;
-    return newInput;
+static ParserInput *build_parser_input(DataOutput *p_data_output) {
+    ParserInput *p_new_input = malloc(sizeof *p_new_input);
+    p_new_input->file = p_data_output->file;
+    p_new_input->filters = g_p_process_params->filters_list;
+    p_new_input->filters_length = g_p_process_params->filters_list_length;
+    return p_new_input;
 }
 
 
-void closeResources(DataOutput *dataData) {
-    fclose(dataData->file);
+static void close_resources(DataOutput *p_data_data) {
+    //TODO: CLOSE ALL FILES
+    fclose(p_data_data->file);
 }
-//TODO: CLOSE ALL FILES

@@ -2,16 +2,16 @@
 #include "formatter.h"
 #include "stdlib.h"
 
-Format* leader_purchase_sale_major_opening(Leader *leader) {
-    if (leader->purchasePrice > leader->openingPrice &&
-        leader->salePrice > leader->openingPrice) {
+Format *_leader_purchase_sale_major_opening(Leader *p_leader) {
+    if (p_leader->purchase_price > p_leader->opening_price &&
+        p_leader->sale_price > p_leader->opening_price) {
 
-        Format *format = malloc(sizeof *format);
-        format->identifier = "bgcolor";
-        format->value = "red";
-        format->apply_component = COMPONENT_TR;
+        Format *p_format = malloc(sizeof *p_format);
+        p_format->identifier = "bgcolor";
+        p_format->value = "red";
+        p_format->apply_component = COMPONENT_TR;
 
-        return format;
+        return p_format;
     }
-    return NULL ;
+    return NULL;
 }

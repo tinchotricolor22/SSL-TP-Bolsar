@@ -127,35 +127,35 @@ buildLeaderHTMLLine(Leader *leader, char *line, ExporterColumns *leaderColumns, 
 
     if (leaderColumns->purchasePrice) {
         writeStringHTMLTableColumnTagsOpening(line);
-        sprintf(buffer, "%f", leader->purchasePrice);
+        sprintf(buffer, "%f", leader->purchase_price);
         strcat(line, buffer);
         writeStringHTMLTableColumnTagsClosing(line);
     }
 
     if (leaderColumns->salePrice) {
         writeStringHTMLTableColumnTagsOpening(line);
-        sprintf(buffer, "%f", leader->salePrice);
+        sprintf(buffer, "%f", leader->sale_price);
         strcat(line, buffer);
         writeStringHTMLTableColumnTagsClosing(line);
     }
 
     if (leaderColumns->openingPrice) {
         writeStringHTMLTableColumnTagsOpening(line);
-        sprintf(buffer, "%f", leader->openingPrice);
+        sprintf(buffer, "%f", leader->opening_price);
         strcat(line, buffer);
         writeStringHTMLTableColumnTagsClosing(line);
     }
 
     if (leaderColumns->maxPrice) {
         writeStringHTMLTableColumnTagsOpening(line);
-        sprintf(buffer, "%f", leader->maxPrice);
+        sprintf(buffer, "%f", leader->max_price);
         strcat(line, buffer);
         writeStringHTMLTableColumnTagsClosing(line);
     }
 
     if (leaderColumns->minPrice) {
         writeStringHTMLTableColumnTagsOpening(line);
-        sprintf(buffer, "%f", leader->minPrice);
+        sprintf(buffer, "%f", leader->min_price);
         strcat(line, buffer);
         writeStringHTMLTableColumnTagsClosing(line);
     }
