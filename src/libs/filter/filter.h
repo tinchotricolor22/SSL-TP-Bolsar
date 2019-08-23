@@ -9,9 +9,9 @@
 typedef int FilterResult;
 
 //Filter represents the filter method
-typedef FilterResult(*Filter)(void *data);
+typedef FilterResult(*Filter)(const void *data);
 
 //_leader_filter_major_05_variation is a filter that returns true if leader has variation > 0.5
-FilterResult _leader_filter_major_05_variation(Leader *leader);
+FilterResult _leader_filter_major_05_variation(const Leader *);
 
 #endif

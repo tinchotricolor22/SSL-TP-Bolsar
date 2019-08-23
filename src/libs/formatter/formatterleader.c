@@ -2,7 +2,7 @@
 #include "formatter.h"
 #include "stdlib.h"
 
-Format *_leader_purchase_sale_major_opening(Leader *p_leader) {
+Format *_leader_purchase_sale_major_opening(const Leader *p_leader) {
     if (p_leader->purchase_price > p_leader->opening_price &&
         p_leader->sale_price > p_leader->opening_price) {
 

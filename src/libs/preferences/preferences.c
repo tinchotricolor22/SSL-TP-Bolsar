@@ -12,7 +12,8 @@ ProcessParams *default_leaders_05_variation_screen() {
     process_params->p_columns = buildLeaderColumns(1, 0, 0, 0, 0, 0, 0);
     process_params->filters_list = malloc(sizeof process_params->filters_list[0] * FILTERS_MAX_LENGTH);
     process_params->filters_list_length = 0;
-    add(process_params->filters_list, _leader_filter_major_05_variation, &process_params->filters_list_length, FILTERS_MAX_LENGTH);
+    add(process_params->filters_list, _leader_filter_major_05_variation, &process_params->filters_list_length,
+        FILTERS_MAX_LENGTH);
 
     process_params->formats_conditions_list_length = 0;
 
@@ -29,7 +30,8 @@ ProcessParams *default_leaders_05_variation_HTML() {
 
     process_params->filters_list = malloc(sizeof process_params->filters_list[0] * FILTERS_MAX_LENGTH);
     process_params->filters_list_length = 0;
-    add(process_params->filters_list, _leader_filter_major_05_variation, &process_params->filters_list_length, FILTERS_MAX_LENGTH);
+    add(process_params->filters_list, _leader_filter_major_05_variation, &process_params->filters_list_length,
+        FILTERS_MAX_LENGTH);
 
     process_params->formats_conditions_list = malloc(sizeof process_params->formats_conditions_list[0] * MAX_FORMATS);
     process_params->formats_conditions_list_length = 0;

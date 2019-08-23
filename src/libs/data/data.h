@@ -22,7 +22,7 @@ typedef DataResult (*DataMethod)(DataOutput**);
 Logger data_debug_logger;
 
 //init_data inits data_debug_logger
-void init_data(Logger);
+void init_data(const Logger);
 
 //_get_data_with_online_method uses online method with WGET
 //returns DATA_RESULT and fills DataOutput

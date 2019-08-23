@@ -12,13 +12,15 @@ static ParserInput *build_parser_input(DataOutput *);
 //close_resources free pointers
 static void close_resources(DataOutput *p_data_data);
 
-void init_processor(Logger processor_debug_logger_arg) {
+void init_processor(const Logger processor_debug_logger_arg) {
     processor_debug_logger = processor_debug_logger_arg;
 }
 
 void
-init_process_params(DataMethod data_method, ParserMethod parserMethod, ExporterMethod exporterMethod, Filter **filters,
-                    int filters_length, Format **formats, int formats_length, ExporterColumns **p_columns) {
+init_process_params(const DataMethod data_method, const ParserMethod parserMethod, const ExporterMethod exporterMethod,
+                    const Filter **filters,
+                    const int filters_length, const Format **formats, const int formats_length,
+                    const ExporterColumns **p_columns) {
     g_p_process_params = malloc(sizeof *g_p_process_params);
     g_p_process_params->data_method = data_method;
     g_p_process_params->parser_method = parserMethod;

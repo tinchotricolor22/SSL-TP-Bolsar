@@ -2,7 +2,7 @@
 #include "stdio.h"
 #include "string.h"
 
-void init_config(Logger debug_logger) {
+void init_config(const Logger debug_logger) {
     config_debug_logger = debug_logger;
 }
 

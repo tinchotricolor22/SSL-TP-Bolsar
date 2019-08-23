@@ -18,9 +18,9 @@ typedef struct Format {
 } Format;
 
 //FormatCondition represents format condition functions that returns a Format* if
-typedef Format *(*FormatCondition)(void *);
+typedef Format *(*FormatCondition)(const void *);
 
 //_leader_purchase_sale_major_opening is a format condition that returns true if leader has purchase and sale > to opening price
-Format *_leader_purchase_sale_major_opening(Leader *);
+Format *_leader_purchase_sale_major_opening(const Leader *);
 
 #endif

@@ -39,5 +39,5 @@ Option export_options_menu();
 Option reports_option_menu();
 
 //print_final_error_message prints error message with error code
-void print_final_error_message(int error_code);
+void print_final_error_message(int);
 

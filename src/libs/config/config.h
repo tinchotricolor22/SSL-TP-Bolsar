@@ -39,7 +39,7 @@ struct Config g_config;
 Logger config_debug_logger;
 
 //init_config inits config_debug_logger
-void init_config(Logger);
+void init_config(const Logger);
 
 //init_config inits g_config variable extracting data from config.properties file
 ResultConfig init_config_properties();

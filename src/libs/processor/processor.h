@@ -35,10 +35,11 @@ ProcessParams *g_p_process_params;
 Logger processor_debug_logger;
 
 //init_processor inits processor_debug_logger
-void init_processor(Logger);
+void init_processor(const Logger);
 
 //init_process_params inits ProcessParams to execute process
-void init_process_params(DataMethod, ParserMethod, ExporterMethod, Filter **, int, Format **, int, ExporterColumns **);
+void init_process_params(const DataMethod, const ParserMethod, const ExporterMethod, const Filter **, const int,
+                         const Format **, const int, const ExporterColumns **);
 
 //process executes the main flow of the program using process params and returns process result
 ProcessResult process();

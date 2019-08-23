@@ -2,7 +2,7 @@
 #include "config.h"
 #include "stdlib.h"
 
-void init_data(Logger debugLogger) {
+void init_data(const Logger debugLogger) {
     data_debug_logger = debugLogger;
 }
 
