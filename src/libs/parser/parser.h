@@ -32,7 +32,6 @@ typedef struct ParserInput {
     int filters_list_length;
 } ParserInput;
 
-
 //ParserMethod represents the parser methods
 typedef ParserResult(*ParserMethod)(ParserOutput **, ParserInput *);
 
