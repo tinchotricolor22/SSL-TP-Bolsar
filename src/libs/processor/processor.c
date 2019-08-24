@@ -32,6 +32,29 @@ init_process_params(const DataMethod data_method, const ParserMethod parserMetho
     g_p_process_params->p_columns = *p_columns;
 }
 
+static ExporterParams *build_exporter_params() {
+    ExporterParams *p_ep = malloc(sizeof *p_ep);
+    p_ep->p_columns = g_p_process_params->p_columns;
+    p_ep->formats_conditions_list = g_p_process_params->formats_conditions_list;
+    p_ep->formats_conditions_list_length = g_p_process_params->formats_conditions_list_length;
+
+    return p_ep;
+}
+
+static ParserInput *build_parser_input(DataOutput *p_data_output) {
+    ParserInput *p_new_input = malloc(sizeof *p_new_input);
+    p_new_input->file = p_data_output->file;
+    p_new_input->filters = g_p_process_params->filters_list;
+    p_new_input->filters_length = g_p_process_params->filters_list_length;
+    return p_new_input;
+}
+
+
+static void close_resources(DataOutput *p_data_data) {
+    //TODO: CLOSE ALL FILES
+    fclose(p_data_data->file);
+}
+
 ProcessResult process() {
     processor_debug_logger("Calling data method [event:process]");
 
@@ -63,27 +86,4 @@ ProcessResult process() {
     close_resources(p_data_data);
 
     return PROCESS_OK;
-}
-
-static ExporterParams *build_exporter_params() {
-    ExporterParams *p_ep = malloc(sizeof *p_ep);
-    p_ep->p_columns = g_p_process_params->p_columns;
-    p_ep->formats_conditions_list = g_p_process_params->formats_conditions_list;
-    p_ep->formats_conditions_list_length = g_p_process_params->formats_conditions_list_length;
-
-    return p_ep;
-}
-
-static ParserInput *build_parser_input(DataOutput *p_data_output) {
-    ParserInput *p_new_input = malloc(sizeof *p_new_input);
-    p_new_input->file = p_data_output->file;
-    p_new_input->filters = g_p_process_params->filters_list;
-    p_new_input->filters_length = g_p_process_params->filters_list_length;
-    return p_new_input;
-}
-
-
-static void close_resources(DataOutput *p_data_data) {
-    //TODO: CLOSE ALL FILES
-    fclose(p_data_data->file);
 }
