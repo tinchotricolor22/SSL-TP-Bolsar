@@ -3,14 +3,21 @@
 
 /********* LIST *********/
 
-void add(void **elems, void *elem, int *length, const int max_length);
+//add adds element to list of elements.
+//increments the length if is minus than max_length
+void add(void **, void *, int *, const int);
 
 /********* STRINGS *********/
-double extractDoubleValue(char* stringDouble);
+//extract_double_value returns double from string double
+double extract_double_value(char *);
 
-void trim(const char *input, char *result);
+//trim quit spaces from string
+void trim(const char *, char *);
 
-void replace(char *input, const char character, const char replace);
+//replace replaces character with replace in input message
+void replace(char *, const char, const char);
 
-char *str_replace(char *orig, char *rep, char *with);
+//str_replace replace *rep with *with in *orig
+char *str_replace(char *, char *, char *);
+
 #endif

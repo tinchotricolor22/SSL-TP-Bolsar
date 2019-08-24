@@ -9,11 +9,11 @@ void add(void **elems, void *elem, int *length, const int max_length) {
     }
 }
 
-double extractDoubleValue(char *stringDouble) {
-    trim(stringDouble, stringDouble);
-    replace(stringDouble, ',', '.');
+double extract_double_value(char *string_double) {
+    trim(string_double, string_double);
+    replace(string_double, ',', '.');
 
-    return atof(stringDouble);
+    return atof(string_double);
 }
 
 void trim(const char *input, char *result) {

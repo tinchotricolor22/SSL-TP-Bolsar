@@ -2,13 +2,12 @@
 #include "config.h"
 #include "stdlib.h"
 
-void initData(Logger debugLogger) {
-    FSPath = g_config.fs_data_path;
-    dataDebugLogger = debugLogger;
+void init_data(const Logger debug_logger) {
+    data_debug_logger = debug_logger;
 }
 
-DataOutput *createDataOutput(FILE* file) {
-    DataOutput *newOutput = malloc(sizeof *newOutput);
-    newOutput->file = file;
-    return newOutput;
+DataOutput *create_data_output(FILE* file) {
+    DataOutput *p_new_output = malloc(sizeof *p_new_output);
+    p_new_output->file = file;
+    return p_new_output;
 }

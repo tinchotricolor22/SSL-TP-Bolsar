@@ -2,10 +2,17 @@
 #include "stdio.h"
 #include "string.h"
 
-int init_config() {
+void init_config(const Logger debug_logger) {
+    config_debug_logger = debug_logger;
+}
+
+ResultConfig init_config_properties() {
+    config_debug_logger("Opening file in filesystem resources/config.properties file [event:init_config_properties]");
+
     FILE *config_properties = fopen("resources/config.properties", "r");
 
     if (config_properties == NULL) {
+        init_config_properties( "ERROR: Opening file in path resources/config.properties [event:init_config_properties]");
         return RESULT_CONFIG_ERROR;
     }
 

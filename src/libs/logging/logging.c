@@ -2,17 +2,15 @@
 #include "stdio.h"
 #include "logging.h"
 
-//printfDebug calls printf, puts [DEBUG] string before the message and \n at end of the line
-int printfDebug(const char *message, ...) {
+int printf_debug(const char *message, ...) {
     va_list args;
     va_start(args, message);
     printf("[DEBUG] ");
-    vprintf(message, args); // TODO: Return printf int
+    vprintf(message, args);
     va_end(args);
     return printf("\n");
 }
 
-//printfNone returns 0. Must be used to avoid output messages.
-int printfNone(const char *message, ...) {
+int printf_none(const char *message, ...) {
     return 0;
 }

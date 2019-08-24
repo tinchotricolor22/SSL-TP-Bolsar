@@ -17,16 +17,27 @@
 #define REPORT_LEADERS_SALE_PURCHASE_CSV 3
 #define REPORT_CUSTOM 4
 
+//Option represents option selected by user
 typedef int Option;
 
-void initUI(Logger stdLogger);
+//ui_logger is logger for ui
+Logger ui_logger;
 
-Option methodOptionsMenu();
+//init_UI inits ui_logger
+void init_UI(const Logger);
 
-Option exportOptionsMenu();
+//method_options_menu prints the menu to select an scraping method
+//returns selected option
+Option method_options_menu();
 
-Option reportsOptionMenu();
+//export_options_menu prints the menu to select an export method
+//returns selected option
+Option export_options_menu();
 
-void printFinalErrorMessage(int errorCode);
+//reports_option_menu prints the menu to select default or custom report
+//returns selected option
+Option reports_option_menu();
 
-Logger uiLogger;
+//print_final_error_message prints error message with error code
+void print_final_error_message(const int);
+
