@@ -1,7 +1,6 @@
 #include "preferences.h"
 #include "stdlib.h"
 #include "../utils/commons.h"
-#include "../exporter/exporter.h"
 
 ProcessParams *default_leaders_05_variation_screen() {
     ProcessParams *process_params = malloc(sizeof *process_params);
