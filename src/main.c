@@ -6,8 +6,7 @@
 #include "libs/data/data.h"
 #include "libs/exporter/exporter.h"
 #include "libs/preferences/preferences.h"
-
-#define DEBUG 1
+#include "string.h"
 
 //main_debug_logger is logger for debug mode in main file
 static Logger main_debug_logger;
@@ -35,8 +34,8 @@ DataMethod data_method(const Option option_method);
 //exporter_method returns exporter strategy for custom reports
 ExporterMethod exporter_method(const Option option_method);
 
-int main() {
-    init();
+int main(int argc, char *argv[]) {
+    init(argc, argv);
     main_debug_logger("Starting config [event:main]");
     ResultConfig result_config = init_config_properties();
     if (result_config == RESULT_CONFIG_ERROR) {
@@ -60,7 +59,14 @@ int main() {
     return process_result;
 }
 
-void init() {
+void init(int argc, char *argv[]) {
+    int DEBUG = 0;
+    if(argc > 0){
+        if(!strcmp(argv[argc-1],"--debug")){
+            DEBUG = 1;
+        }
+    }
+
     Logger std_logger = printf;
     Logger debug_logger;
     if (DEBUG) {
