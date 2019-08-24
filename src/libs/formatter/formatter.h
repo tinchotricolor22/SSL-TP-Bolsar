@@ -1,7 +1,7 @@
 #ifndef FORMATTER_TYPES_HEADER
 #define FORMATTER_TYPES_HEADER
 
-#include "../parser/parser.h"
+#include "parser.h"
 #include "../domain/leader.h"
 
 #define COMPONENT_TR "TR"

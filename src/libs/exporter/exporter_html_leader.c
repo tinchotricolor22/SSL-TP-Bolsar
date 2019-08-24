@@ -86,7 +86,7 @@ void build_leader_html_line(Leader *p_leader, char *p_line, ExporterColumns *p_l
     write_string_html_table_row_tags_closing(p_line);
 }
 
-//build_leader_html_table_header writes a row with all columns of the leaders in td
+//build_leader_html_table_header writes a row with all columns of the data_list in td
 static void build_leader_html_table_header(char *p_headers, ExporterColumns *p_leader_columns) {
     strcpy(p_headers, "");
 
@@ -154,9 +154,9 @@ static void write_html_table_with_data(FILE *p_output, ParserOutput *p_data, Exp
     exporter_debug_logger("Building and writing lines [event:write_html_table_with_data]");
 
     write_html_table_body_tags_opening(p_output);
-    for (int i = 0; i < p_data->leaders_length; i++) {
+    for (int i = 0; i < p_data->data_list_length; i++) {
         char line[LINE_LIMIT];
-        build_leader_html_line(p_data->leaders[i], line, p_columns, formats_list, formats_list_length);
+        build_leader_html_line(p_data->data_list[i], line, p_columns, formats_list, formats_list_length);
         fprintf(p_output, "%s", line);
     }
     write_html_table_body_tags_closing(p_output);
@@ -173,7 +173,7 @@ static void write_html_file_with_data(FILE *p_output, ParserOutput *p_data, Expo
 }
 
 ExportResult export_html(const ParserOutput *p_data, const ExporterParams *p_params) {
-    exporter_debug_logger("Starting export in HTML format [event:export_html]");
+    exporter_debug_logger("Exporting in HTML format [event:export_html]");
     char output_path[PATH_LIMIT];
     output_path_with_extension(output_path, HTML_EXTENSION);
     exporter_debug_logger("Opening file in path %s [event:export_html]", output_path);

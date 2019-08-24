@@ -4,7 +4,7 @@
 #include "../domain/leader.h"
 #include "../logging/logging.h"
 #include "stdio.h"
-#include "../parser/parser.h"
+#include "parser.h"
 #include "../formatter/formatter.h"
 
 // PROCESS RESULT
@@ -27,7 +27,7 @@
 #define LEADER_MAX_PRICE_HEADER "Precio Máximo"
 #define LEADER_MIN_PRICE_HEADER "Precio Mínimo"
 
-//LeaderColumns represents structs with leaders p_columns
+//LeaderColumns represents structs with data_list p_columns
 typedef struct LeaderColumns {
     int specie;
     int variation;
@@ -38,7 +38,7 @@ typedef struct LeaderColumns {
     int min_price;
 } LeaderColumns;
 
-//build_leader_columns instanciate ExportColumns struct with leaders columns args
+//build_leader_columns instanciate ExportColumns struct with data_list columns args
 LeaderColumns *build_leader_columns(const int, const int, const int, const int, const int, const int, const int);
 
 /**************************/
@@ -68,7 +68,7 @@ typedef int ExportResult;
 //ExporterMethod represents the export methods
 typedef ExportResult(*ExporterMethod)(const ParserOutput *, const ExporterParams *);
 
-//write_csv_file_with_data calls write headers and lines from leaders list
+//write_csv_file_with_data calls write headers and lines from data_list list
 void write_csv_file_with_data(FILE *, ParserOutput *, ExporterColumns *);
 
 //export_csv exports  CSV file from input on output_path_config

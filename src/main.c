@@ -73,7 +73,7 @@ void init() {
     init_config(debug_logger);
     init_UI(std_logger);
     init_data(debug_logger);
-    initParser(debug_logger);
+    init_parser(debug_logger);
     init_exporter(debug_logger);
     init_processor(debug_logger);
 }

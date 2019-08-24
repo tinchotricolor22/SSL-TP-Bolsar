@@ -10,52 +10,42 @@
 #define TAGS_MAX_LENGTH 100
 #define TAG_CHAR_MAX_LENGTH 1000
 
-#define TABLE_ACTIONS_ID "<table border=\"1\">"
-#define TABLE_CLOSE_TAGS "</table>"
-
 #define PARSER_RESULT_OK 0
 #define PARSER_RESULT_ERROR 1
 
-#define TAG_ID 200
-#define TAG_RAW_TAG 200
-#define TAG_VALUE 200
+//parser_debug_logger is logger for parser
+Logger parser_debug_logger;
 
-Logger parserDebugLogger;
-
+//ParserResult represents the result of parser methods
 typedef int ParserResult;
 
+//ParserOutput represents the output of parser methods
 typedef struct ParserOutput {
-    Leader **leaders;
-    int leaders_length;
+    void **data_list;
+    int data_list_length;
 } ParserOutput;
 
+//ParserInput represents the input of parser methods
 typedef struct ParserInput {
-    FILE* file;
-    Filter** filters;
-    int filters_length;
-    //Formatter** formatter;
+    FILE *file;
+    Filter **filters_list;
+    int filters_list_length;
 } ParserInput;
 
-//TODO: Esto hacerlo en un type de html
-typedef struct Tag {
-    char id[TAG_ID];
-    char rawTag[TAG_RAW_TAG];
-    char value[TAG_VALUE];
-} Tag;
-
+//ParserMethod represents the parser methods
 typedef ParserResult(*ParserMethod)(ParserOutput **, ParserInput *);
 
-/********** PUBLIC **********/
-//initParser injects dependency variables for parser that includes logger functions
-void initParser(Logger debugLogger);
+//init_parser injects dependency variables for parser that includes logger functions
+void init_parser(Logger);
 
-ParserResult parseDataFromHTML(ParserOutput **, ParserInput*);
-/***************************/
+//create_parser_output creates parser output from data_list
+ParserOutput *create_parser_output(void **, const int);
 
+//parse_data_from_html parse html from input file and returns and output with domain class filled
+ParserResult parse_data_from_html(ParserOutput **, const ParserInput *);
 
-//HTML
-void parseTagsFromHTML(FILE *file, char tdTags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_length, const int tags_max_length);
-void searchTable(FILE *htmlFile, char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_current);
-void searchTag(FILE *htmlFile, char *htmlLine, char tags[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *tags_current, const char *tagToSearch,const char *closeTag);
+/***********HTML***********/
+//parse_table_from_html_file search table in html file and fill tags_list
+void parse_table_from_html_file(FILE *, char tags_list[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH], int *, const int, const char *, const char *, const char *, const char *);
 
 #endif

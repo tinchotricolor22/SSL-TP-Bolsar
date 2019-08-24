@@ -30,8 +30,9 @@ add_executable(SSL_TP_Bolsar
         src/libs/data/data.h
         src/libs/data/data_online.c
         src/libs/data/data_file.c
-        src/libs/parser/parser.c
         src/libs/parser/parser.h
+        src/libs/parser/parser.c
+        src/libs/parser/parser_leader.c
         src/libs/parser/parser_html.c
         src/libs/preferences/preferences.h
         src/libs/preferences/preferences.c

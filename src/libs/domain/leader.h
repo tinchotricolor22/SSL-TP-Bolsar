@@ -1,8 +1,6 @@
 #ifndef LEADER_HEADER
 #define LEADER_HEADER
 
-#define LEADERS_MAX_LENGTH 1000
-
 //Leader represents a leader entity
 typedef struct Leader {
     char specie[100];
