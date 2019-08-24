@@ -3,7 +3,7 @@
 
 #include "../logging/logging.h"
 #include "../exporter/exporter.h"
-#include "../parser/parser.h"
+#include "parser.h"
 #include "../formatter/formatter.h"
 #include "../data/data.h"
 #include "../filter/filter.h"

@@ -44,8 +44,8 @@ static ExporterParams *build_exporter_params() {
 static ParserInput *build_parser_input(DataOutput *p_data_output) {
     ParserInput *p_new_input = malloc(sizeof *p_new_input);
     p_new_input->file = p_data_output->file;
-    p_new_input->filters = g_p_process_params->filters_list;
-    p_new_input->filters_length = g_p_process_params->filters_list_length;
+    p_new_input->filters_list = g_p_process_params->filters_list;
+    p_new_input->filters_list_length = g_p_process_params->filters_list_length;
     return p_new_input;
 }
 

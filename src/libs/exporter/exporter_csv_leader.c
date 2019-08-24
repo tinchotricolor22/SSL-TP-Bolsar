@@ -91,7 +91,7 @@ static void build_leader_csv_line(Leader *p_leader, ExporterColumns *p_leader_co
     remove_last_character(p_line);
 }
 
-//write_csv_file_with_data calls write headers and lines from leaders list
+//write_csv_file_with_data calls write headers and lines from data_list list
 void write_csv_file_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns *p_columns) {
     exporter_debug_logger("Building and writing headers [event:write_csv_file_with_data]");
     char headers[LINE_LIMIT];
@@ -99,15 +99,15 @@ void write_csv_file_with_data(FILE *p_output, ParserOutput *p_data, ExporterColu
     fprintf(p_output, "%s", headers);
 
     exporter_debug_logger("Building and writing lines [event:write_csv_file_with_data]");
-    for (int i = 0; i < p_data->leaders_length; i++) {
+    for (int i = 0; i < p_data->data_list_length; i++) {
         char line[LINE_LIMIT];
-        build_leader_csv_line(p_data->leaders[i], p_columns, line);
+        build_leader_csv_line(p_data->data_list[i], p_columns, line);
         fprintf(p_output, "%s", line);
     }
 }
 
 ExportResult export_csv(const ParserOutput *p_data, const ExporterParams *p_params) {
-    exporter_debug_logger("Starting export in CSV format [event:export_csv]");
+    exporter_debug_logger("Exporting in CSV format [event:export_csv]");
     char output_path[PATH_LIMIT];
     output_path_with_extension(output_path, CSV_EXTENSION);
     exporter_debug_logger("Opening file in path %s [event:export_csv]", output_path);
