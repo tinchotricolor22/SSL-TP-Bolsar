@@ -3,7 +3,8 @@
 #include "../utils/html_writer.h"
 #include "../formatter/formatter.h"
 
-static void write_property_and_value_in_table_row_tag_ppening(char *p_output, Format *p_format) {
+//write_property_and_value_in_table_row_tag_opening writes <tr> tag with property format
+static void write_property_and_value_in_table_row_tag_opening(char *p_output, Format *p_format) {
     if (p_format->apply_component ==
         COMPONENT_TR) { //Iterar esto para solo filtrar los que son TR en la función anterior
         char buffer[50];
@@ -12,6 +13,7 @@ static void write_property_and_value_in_table_row_tag_ppening(char *p_output, Fo
     }
 }
 
+//write_string_html_table_row_tags_opening_and_apply_formats iterates format conditions and apply formats to the row tag
 static void write_string_html_table_row_tags_opening_and_apply_formats(Leader *p_leader, char *p_output,
                                                                        Format **formats_conditions_list,
                                                                        int formats_conditions_list_length) {
@@ -20,13 +22,13 @@ static void write_string_html_table_row_tags_opening_and_apply_formats(Leader *p
         Format *format = format_condition(p_leader);
 
         if (format != NULL) {
-            write_property_and_value_in_table_row_tag_ppening(p_output, format);
+            write_property_and_value_in_table_row_tag_opening(p_output, format);
         }
     }
 }
 
-void
-build_leader_html_line(Leader *p_leader, char *p_line, ExporterColumns *p_leader_columns, Format **formats_list,
+//build_leader_html_line writes a row with all the properties of leader in <td>
+void build_leader_html_line(Leader *p_leader, char *p_line, ExporterColumns *p_leader_columns, Format **formats_list,
                        int formats_list_length) {
     char buffer[LINE_LIMIT];
     strcpy(p_line, "");
@@ -84,7 +86,7 @@ build_leader_html_line(Leader *p_leader, char *p_line, ExporterColumns *p_leader
     write_string_html_table_row_tags_closing(p_line);
 }
 
-
+//build_leader_html_table_header writes a row with all columns of the leaders in td
 static void build_leader_html_table_header(char *p_headers, ExporterColumns *p_leader_columns) {
     strcpy(p_headers, "");
 
@@ -136,8 +138,8 @@ static void build_leader_html_table_header(char *p_headers, ExporterColumns *p_l
     write_string_html_table_header_tags_closing(p_headers);
 }
 
-static void
-write_html_table_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns *p_columns, Format **formats_list,
+//write_html_table_with_data writes complete html with leader data and formats applied
+static void write_html_table_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns *p_columns, Format **formats_list,
                            int formats_list_length) {
     exporter_debug_logger("Building and writing Table [event:write_html_table_with_data]");
 
@@ -152,18 +154,18 @@ write_html_table_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns
     exporter_debug_logger("Building and writing lines [event:write_html_table_with_data]");
 
     write_html_table_body_tags_opening(p_output);
-    write_html_table_body_tags_opening(p_output);
     for (int i = 0; i < p_data->leaders_length; i++) {
         char line[LINE_LIMIT];
         build_leader_html_line(p_data->leaders[i], line, p_columns, formats_list, formats_list_length);
         fprintf(p_output, "%s", line);
     }
     write_html_table_body_tags_closing(p_output);
-    write_html_table_body_tags_closing(p_output);
+
+    write_html_table_tag_closing(p_output);
 }
 
-static void
-write_html_file_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns *p_columns, Format **formats_list,
+//write_html_file_with_data calls html writers to
+static void write_html_file_with_data(FILE *p_output, ParserOutput *p_data, ExporterColumns *p_columns, Format **formats_list,
                           int formats_list_length) {
     write_html_main_tags_opening(p_output);
     write_html_table_with_data(p_output, p_data, p_columns, formats_list, formats_list_length);
