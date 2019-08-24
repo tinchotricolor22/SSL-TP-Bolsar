@@ -22,7 +22,7 @@
 #define COMPONENT_CLOSING_TAG "</td>"
 
 //apply_conditions return true if leader apply all conditions in list
-static int apply_conditions(const Filter **filters_list, const int filters_list_length, const Leader *leader) {
+static int apply_conditions(Filter **filters_list, const int filters_list_length, const Leader *leader) {
     parser_debug_logger("Appliyng conditions to leader specie: %s[event:apply_conditions]", leader->specie);
     for (int i = 0; i < filters_list_length; i++) {
         Filter filter = filters_list[i];
@@ -43,7 +43,7 @@ static void fill_leaders_from_tags(char tags_list[TAGS_MAX_LENGTH][TAG_CHAR_MAX_
 
         trim(tags_list[count_tags], tags_list[count_tags]);
 
-        sscanf(tags_list[count_tags], "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;]", column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8], column[9], column[10], column[11], column[12], column[13], column[14], column[15]);
+        sscanf(tags_list[count_tags], "%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;];%[^;]", column[0], column[1], column[2], column[3], column[4], column[5], column[6], column[7], column[8], column[9], column[10], column[11], column[12], column[13], column[14], column[15]);
         strcpy(new_leader->specie, column[COLUMN_SPECIE]);
 
         new_leader->variation = extract_double_value(column[COLUMN_VARIATION]);
@@ -59,7 +59,7 @@ static void fill_leaders_from_tags(char tags_list[TAGS_MAX_LENGTH][TAG_CHAR_MAX_
     }
 }
 
-ParserResult parse_data_from_html(ParserOutput **data_list, const ParserInput *parser_input) {
+ParserResult parse_data_from_html(ParserOutput **data_list, ParserInput *parser_input) {
     parser_debug_logger("Parsing data from html to fills leaders and return parser output [event:parse_data_from_html]");
 
     char tags_list[TAGS_MAX_LENGTH][TAG_CHAR_MAX_LENGTH];

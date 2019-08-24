@@ -65,7 +65,7 @@ static void build_leader_csv_line(Leader *p_leader, ExporterColumns *p_leader_co
     }
 
     if (p_leader_columns->purchase_price) {
-        sprintf(buffer, "%f%s", p_leader->purchase_price), g_config.csv_delimiter;
+        sprintf(buffer, "%f%s", p_leader->purchase_price, g_config.csv_delimiter);
         strcat(p_line, buffer);
     }
 

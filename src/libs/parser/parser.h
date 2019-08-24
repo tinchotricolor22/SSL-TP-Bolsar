@@ -42,7 +42,7 @@ void init_parser(Logger);
 ParserOutput *create_parser_output(void **, const int);
 
 //parse_data_from_html parse html from input file and returns and output with domain class filled
-ParserResult parse_data_from_html(ParserOutput **, const ParserInput *);
+ParserResult parse_data_from_html(ParserOutput **, ParserInput *);
 
 /***********HTML***********/
 //parse_table_from_html_file search table in html file and fill tags_list
