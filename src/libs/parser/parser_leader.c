@@ -23,7 +23,7 @@
 
 //apply_conditions return true if leader apply all conditions in list
 static int apply_conditions(const Filter **filters_list, const int filters_list_length, const Leader *leader) {
-    parser_debug_logger("Appliyng conditions [event:apply_conditions]");
+    parser_debug_logger("Appliyng conditions to leader specie: %s[event:apply_conditions]", leader->specie);
     for (int i = 0; i < filters_list_length; i++) {
         Filter filter = filters_list[i];
         if (!filter(leader)) {
