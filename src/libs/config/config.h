@@ -35,7 +35,13 @@ static struct Config {
 //g_config represents config to be used in all the lifecycle of the program
 struct Config g_config;
 
+//config_debug_logger is logger for config
+Logger config_debug_logger;
+
+//init_config inits config_debug_logger
+void init_config(const Logger);
+
 //init_config inits g_config variable extracting data from config.properties file
-ResultConfig init_config();
+ResultConfig init_config_properties();
 
 #endif

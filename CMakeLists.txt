@@ -23,33 +23,35 @@ add_executable(SSL_TP_Bolsar
         src/libs/domain/leader.h
         src/libs/exporter/exporter.c
         src/libs/exporter/exporter.h
-        src/libs/exporter/exporter_csv.c
-        src/libs/exporter/exporter_html.c
-        src/libs/exporter/exporter_stdout.c
-        src/libs/exporter/exportertypes.h
+        src/libs/exporter/exporter_csv_leader.c
+        src/libs/exporter/exporter_html_leader.c
+        src/libs/exporter/exporter_stdout_leader.c
         src/libs/data/data.c
         src/libs/data/data.h
-        src/libs/data/datatypes.h
-        src/libs/data/dataonline.c
-        src/libs/data/datafile.c
-        src/libs/parser/parser.c
+        src/libs/data/data_online.c
+        src/libs/data/data_file.c
         src/libs/parser/parser.h
-        src/libs/parser/parserhtml.c
+        src/libs/parser/parser.c
+        src/libs/parser/parser_leader.c
+        src/libs/parser/parser_html.c
         src/libs/preferences/preferences.h
         src/libs/preferences/preferences.c
         src/libs/filter/filter.h
-        src/libs/filter/filterleader.c
+        src/libs/filter/filter_leader.c
         src/libs/formatter/formatter.h
-        src/libs/formatter/formatterleader.c
+        src/libs/formatter/formatter_leader.c
         src/libs/logging/logging.c
         src/libs/logging/logging.h
         src/libs/processor/processor.c
         src/libs/processor/processor.h
-        src/libs/processor/processortypes.h
         src/libs/ui/ui.c
         src/libs/ui/ui.h
         src/libs/utils/commons.c
         src/libs/utils/commons.h
+        src/libs/utils/csv_writer.c
+        src/libs/utils/csv_writer.h
+        src/libs/utils/html_writer.c
+        src/libs/utils/html_writer.h
         src/main.c)
 
 configure_file(resources/lideres_bcba.html resources/lideres_bcba.html)
