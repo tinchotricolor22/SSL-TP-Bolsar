@@ -3,8 +3,8 @@
 TP de Web scraping para la materia "Sintaxis y semántica de lenguajes" de UTN FRBA.
 
 **Integrantes**:
-Martín Morales
-Pablo Cha
+- Martín Morales
+- Pablo Cha
 
 **Cursada**: K2054 Jueves noche
 
