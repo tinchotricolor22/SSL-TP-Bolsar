@@ -8,6 +8,8 @@ TP de Web scraping para la materia "Sintaxis y semántica de lenguajes" de UTN F
 
 **Cursada**: K2054 Jueves noche
 
+**Repo**: [https://github.com/tinchotricolor22/SSL-TP-Bolsar](https://github.com/tinchotricolor22/SSL-TP-Bolsar "https://github.com/tinchotricolor22/SSL-TP-Bolsar")
+
 ## Como correr la app?
 Desde la terminal:
 ```bash
@@ -18,6 +20,10 @@ En modo debug:
 ```bash
 sudo ./SSL_TP_Bolsar --debug
 ```
+
+### [Manual de usuario](https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/develop/doc/TP%20WEB%20SCRAPPING%20-%20Morales_Cha.pdf "Manual de usuario")
+
+
 
 ## Arquitectura
 [![arquitecture.png](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture_tp.png "arquitecture.png")](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture_tp.png "arquitecture.png")
