@@ -20,7 +20,7 @@ sudo ./SSL_TP_Bolsar --debug
 ```
 
 ## Arquitectura
-[![arquitecture.png](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture.png "arquitecture.png")](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture.png "arquitecture.png")
+[![arquitecture.png](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture_tp.png "arquitecture.png")](https://raw.githubusercontent.com/tinchotricolor22/SSL-TP-Bolsar/develop/doc/images/arquitecture_tp.png "arquitecture.png")
 
 - **main**: punto de entrada. Se encarga de llamar a la ui, obtener las preferences para el reporte que eligió el usuario y con ellas llamar al processor. También se cargan las configuraciones necesarias desde `resources/config.properties`.
 - **processor**: es el flujo principal. Se encarga de manejar el input de la respuesta entre componentes.
