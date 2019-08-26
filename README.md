@@ -10,6 +10,9 @@ TP de Web scraping para la materia "Sintaxis y semántica de lenguajes" de UTN F
 
 **Repo**: [https://github.com/tinchotricolor22/SSL-TP-Bolsar](https://github.com/tinchotricolor22/SSL-TP-Bolsar "https://github.com/tinchotricolor22/SSL-TP-Bolsar")
 
+**Consigna**: [https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/master/doc/Consigna.pdf](https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/master/doc/Consigna.pdf "https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/master/doc/Consigna.pdf")
+
+
 ## Introducción
 Es un programa desarrollado en C que obtiene el archivo html de bolsar (o del link que se configure en la config), para parsearlo y devolver distintos reportes predefinidos. También esta la opción de exportar reportes custom, pudiendo elegir ir por el método online o filesystem, y el tipo de export, que pueden ser: imprimir en pantalla, CSV o HTML.
 El comando wget viene incluido en el proyecto, en la carpeta "commands", tanto para unix como windows.
