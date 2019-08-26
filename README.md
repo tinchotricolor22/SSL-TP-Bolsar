@@ -64,10 +64,10 @@ Utilizamos CMake, donde tenemos que configurar el archivo CMakeLists.txt, para q
 
 Por otro lado, armamos nuestro custom_makefile.sh para ejecutar con shell. El mismo utiliza gcc para compilar todos los archivos .c y genera los .o en el directorio custom_build.
 
-##Testing
+## Testing
 Utilizamos CTest, soportado por CMake.
 
-## Conclusiones sobre el TP
+## Conclusiones sobre el TP
 Si bien el scope de la consigna no lo decía, nos pareció interesante mantener una mentalidad de abstracción y escalabilidad a la hora de plantear el proyecto. Esto hizo que tal vez se complejize mucho más, y por eso no llegamos a hacer todos los refactor y code smells necesarios para que queda más legible y performante. Por otro lado, nos desafió a buscar soluciones interesantes en C, donde encontramos un enriquecimiento en:
 - División de responsabilidades
 - Problemáticas del paradigma estructurado
