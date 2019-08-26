@@ -56,3 +56,5 @@ add_executable(SSL_TP_Bolsar
 
 configure_file(resources/lideres_bcba.html resources/lideres_bcba.html)
 configure_file(resources/config.properties resources/config.properties)
+configure_file(commands/wget commands/wget COPYONLY)
+file( COPY commands/GnuWin32/ DESTINATION commands/GnuWin32/)

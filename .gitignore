@@ -5,4 +5,5 @@ output/*
 executable
 scratch/
 /cmake-build-debug/
+/custom_build/
 .idea/
