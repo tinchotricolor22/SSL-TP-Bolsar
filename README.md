@@ -14,9 +14,11 @@ TP de Web scraping para la materia "Sintaxis y semántica de lenguajes" de UTN F
 Es un programa desarrollado en C que obtiene el archivo html de bolsar (o del link que se configure en la config), para parsearlo y devolver distintos reportes predefinidos. También esta la opción de exportar reportes custom, pudiendo elegir ir por el método online o filesystem, y el tipo de export, que pueden ser: imprimir en pantalla, CSV o HTML.
 El comando wget viene incluido en el proyecto, en la carpeta "commands", tanto para unix como windows.
 
-### [Manual de usuario](https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/master/doc/TP%20WEB%20SCRAPPING%20-%20Morales_Cha.pdf "Manual de usuario")
+### [Manual de usuario](https://github.com/tinchotricolor22/SSL-TP-Bolsar/blob/master/doc/Manual%20de%20usuario.pdf "Manual de usuario")
 
 ## Como correr la app?
+### **UNIX**
+
 Desde la terminal:
 ```bash
 sudo ./SSL_TP_Bolsar
@@ -25,6 +27,18 @@ sudo ./SSL_TP_Bolsar
 En modo debug:
 ```bash
 sudo ./SSL_TP_Bolsar --debug
+```
+
+### **WINDOWS**
+
+Desde el cmd:
+```bash
+SSL_TP_Bolsar.exe
+```
+
+En modo debug:
+```bash
+SSL_TP_Bolsar.exe --debug
 ```
 
 ## Configuración
@@ -61,8 +75,9 @@ El programa se probó en macOS, pero debería funcionar en sistemas windows u ot
 ## Compilación
 
 Utilizamos CMake, donde tenemos que configurar el archivo CMakeLists.txt, para que incluya cada uno de los archivos fuente y los recursos en el directorio compilado que genera (cmake-build-debug). Nos pareció ir por el camino de CMake porque ya tenía una integración con el IDE CLion, y acelero el proceso de desarrollo y testing.
+También nos permitió hacer cross compiling para poder armar el ejecutable para windows. El archivo necesario para ello es `cmakeMingw/mingw-w64-x86_64.cmake`
 
-Por otro lado, armamos nuestro custom_makefile.sh para ejecutar con shell. El mismo utiliza gcc para compilar todos los archivos .c y genera los .o en el directorio custom_build.
+Por otro lado, armamos nuestro custom_makefile.sh para ejecutar con shell. El mismo utiliza gcc para compilar todos los archivos .c y genera los .o en el directorio custom_build. (Solo unix).
 
 ## Testing
 Utilizamos CTest, soportado por CMake.
@@ -78,5 +93,6 @@ Si bien el scope de la consigna no lo decía, nos pareció interesante mantener 
 - Manejo de punteros a funciones
 - Tipo de dato void*
 - makefile y problemáticas de compilación
+- cross-compiling
 
 Esto fue algo que sumó, por todos los topes con los que nos encontrábamos y porque no estabamos acostumbrados, ya que los dos programamos en lenguajes con GC y otras herramientas que facilitan muchas de estas cosas.
