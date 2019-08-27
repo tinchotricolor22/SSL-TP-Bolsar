@@ -1,5 +1,7 @@
 # TP WEB SCRAPING
 ![](https://img.shields.io/badge/technology-C-blue)
+![](https://img.shields.io/badge/platform-windows-blue)
+![](https://img.shields.io/badge/platform-osx-red)
 
 TP de Web scraping para la materia "Sintaxis y semántica de lenguajes" de UTN FRBA.
 
